@@ -1,0 +1,1273 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Resultados · Agua Inmaculada Chapultepec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
+<style>
+/* Estilo basado en DESIGN (1).md (Seline Analytics): papel cálido, neutros "stone", un solo acento cian,
+   títulos en peso 400 con tracking cerrado, tarjetas planas de 10px con borde fino, controles en píldora.
+   Excepción deliberada: rojo solo para pérdida / variación negativa (dato financiero), nunca decorativo. */
+:root{
+  --paper:#fafaf9; --panel:#ffffff; --band:#f5f5f4; --ink:#0c0a09; --ink-soft:#1c1917; --muted:#78716c; --ash:#a8a29e;
+  --line:#e8e6e5; --line-2:#d6d3d1;
+  --accent:#3ba6f1; --accent-edge:#3398e1; --wash:#c1e1f7;
+  --in:#3ba6f1; --in-soft:#a8a29e; --out:#78716c; --out-soft:#d6d3d1;
+  --pos:#3398e1; --neg:#dc2626; --util:#0c0a09;
+  --shadow:0 4px 16px rgba(0,0,0,.05); --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --font:"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-d:"Inter Tight", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0c0a09; --panel:#1c1917; --band:#171412; --ink:#fafaf9; --ink-soft:#e7e5e4; --muted:#a8a29e; --ash:#78716c;
+    --line:#292524; --line-2:#44403c; --wash:rgba(59,166,241,.18);
+    --in:#3ba6f1; --in-soft:#57534e; --out:#a8a29e; --out-soft:#44403c; --pos:#7cc4f8; --neg:#f87171; --util:#fafaf9;
+    --shadow:0 4px 16px rgba(0,0,0,.35); --shadow-sm:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0c0a09; --panel:#1c1917; --band:#171412; --ink:#fafaf9; --ink-soft:#e7e5e4; --muted:#a8a29e; --ash:#78716c;
+  --line:#292524; --line-2:#44403c; --wash:rgba(59,166,241,.18);
+  --in:#3ba6f1; --in-soft:#57534e; --out:#a8a29e; --out-soft:#44403c; --pos:#7cc4f8; --neg:#f87171; --util:#fafaf9;
+  --shadow:0 4px 16px rgba(0,0,0,.35); --shadow-sm:none; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.64;letter-spacing:.004em;
+  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding:20px 24px 64px}
+
+header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.brand{font-weight:500;font-size:14px;color:var(--ink)}
+.brand small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+nav{display:flex;gap:0;font-size:14px}
+nav a{color:var(--muted);text-decoration:none;padding:4px 12px;border-radius:9999px}
+nav a:hover{color:var(--ink)}
+.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:9999px;padding:3px 10px;box-shadow:var(--shadow-sm)}
+.hd-der{display:flex;align-items:center;gap:8px}
+.cargando{margin:0;padding:40vh 16px 0;text-align:center;font-size:13px;color:var(--muted)}
+.acceso{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.acceso form{width:100%;max-width:360px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:28px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.acceso h1{font-size:20px;font-weight:400;letter-spacing:-.01em;margin:0}
+.acceso p{margin:0;font-size:13px;color:var(--muted)}
+.acceso label{font-size:12px;font-weight:600;color:var(--ink-soft)}
+.acceso input{font:inherit;padding:9px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper);color:var(--ink)}
+.acceso input:focus-visible,.acceso button:focus-visible,.btn-sal:focus-visible{outline:2px solid var(--accent-edge);outline-offset:2px}
+.acceso button{font:inherit;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:9999px;padding:9px 14px;cursor:pointer}
+.acceso button:disabled{opacity:.6;cursor:default}
+.acceso .acc-msg{color:var(--neg);min-height:1.2em}
+.btn-sal{font:inherit;font-size:12px;color:var(--muted);background:none;border:1px solid var(--line-2);border-radius:9999px;padding:4px 10px;cursor:pointer}
+.btn-act{font:inherit;font-size:12px;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:9999px;padding:5px 12px;cursor:pointer;box-shadow:var(--shadow-sm)}
+.btn-act:hover{filter:brightness(.93)} .btn-act:disabled{opacity:.6;cursor:wait}
+section.panel.lote{margin-top:16px;border-color:var(--accent)}
+.lote .acc{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.lote ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--muted)}
+.lote .err{color:#b42318} .lote .okk{color:#067647}
+.lote pre{white-space:pre-wrap;font-size:12px;color:var(--muted);margin:8px 0 0}
+.lote .btn.chico{font-size:12px;padding:3px 10px;margin-top:6px}
+.lote tr.rev td{white-space:normal;background:var(--band)}
+.revbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start}
+.revfoto img{width:100%;max-height:520px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.revq ol{margin:0;padding-left:20px;display:grid;gap:10px}
+.revq textarea{display:block;width:100%;margin-top:4px;font:inherit;font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-radius:8px;padding:6px 8px;resize:vertical}
+.revq li.bloq>b{color:var(--ink)}
+.opcs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.opc{font:inherit;font-size:12px;color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;cursor:pointer;text-align:left}
+.opc:hover{border-color:var(--ink)}
+.opc.sel{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+@media (max-width:720px){ .revbox{grid-template-columns:1fr} }
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:gira 1s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes gira{to{transform:rotate(360deg)}}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ash)}
+.dot.live{background:var(--accent)} .dot.snap{background:var(--ash)}
+
+.sec-head{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;padding:48px 0 0}
+.sec-head .per{font-size:13px;color:var(--muted)}
+.sec-head .per b{color:var(--ink);font-weight:500}
+label.sel{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
+select{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:9999px;padding:6px 34px 6px 16px;appearance:none;cursor:pointer;box-shadow:var(--shadow-sm);
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+select:focus-visible,a:focus-visible,[tabindex]:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.hero{padding:12px 0 36px}
+.hero h1,.hero h2.big{margin:0;font-family:var(--font-d);font-weight:400;font-size:clamp(32px,4.6vw,52px);line-height:1.12;letter-spacing:-.021em;max-width:22ch}
+.amt{font-weight:500}
+.amt.pos{color:var(--accent-edge);background:var(--wash);border-radius:4px;padding:0 .18em;font-weight:400;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.amt.neg{color:var(--neg)}
+.hero p{margin:16px 0 0;color:var(--muted);font-size:16px;line-height:1.69;max-width:64ch}
+
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:820px){.grid,.grid2{grid-template-columns:minmax(0,1fr)}}
+section.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px;margin-top:24px;box-shadow:var(--shadow)}
+.grid>section.panel{margin-top:0}
+section.panel h2{margin:0 0 4px;font-family:var(--font-d);font-size:20px;font-weight:400;letter-spacing:-.005em;line-height:1.2}
+.lead{margin:0 0 16px;color:var(--muted);font-size:14px}
+
+.tscroll{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th{font-weight:500;color:var(--muted);font-size:12px;letter-spacing:.025em;text-align:right;padding:8px;border-bottom:1px solid var(--line)}
+table.t th:first-child{text-align:left}
+table.t td{padding:8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t tr:last-child td{border-bottom:0}
+table.t td:first-child{text-align:left;white-space:normal}
+table.er{min-width:520px}
+table.er td{border-bottom:0}
+table.er tr.sec td{padding-top:18px;font-weight:500;font-size:12px;letter-spacing:.025em;color:var(--muted)}
+table.er tr.sub td:first-child{padding-left:20px;color:var(--muted)}
+table.er tr.tot td{font-weight:500;border-top:1px solid var(--line)}
+table.er tr.net td{font-family:var(--font-d);font-weight:500;font-size:17px;border-top:1px solid var(--ink);padding-top:12px}
+table.er tr.mg td{color:var(--muted);font-size:13px}
+table.t tr.rest td{color:var(--muted)}
+.pos{color:var(--pos)} .neg{color:var(--neg)} .mut{color:var(--muted)}
+.note{margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);background:var(--band);font-size:13px;border-radius:10px;color:var(--ink-soft)}
+.note strong{color:var(--ink);font-weight:500}
+
+.mix{display:flex;flex-direction:column;gap:24px}
+.mix h3{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--muted)}
+.bar{display:flex;gap:2px;height:10px;border-radius:9999px;overflow:hidden;background:var(--line)}
+.bar span{display:block;height:100%}
+.legend{list-style:none;margin:12px 0 0;padding:0;font-size:14px}
+.legend li{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
+.legend i,.keys i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+
+.hbars{display:flex;flex-direction:column;gap:10px}
+.hb{display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr) auto;gap:12px;align-items:center;font-size:14px}
+.hb .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .trk{height:8px;background:var(--band);border-radius:9999px;overflow:hidden}
+.hb .trk span{display:block;height:100%;border-radius:9999px}
+.hb .val{color:var(--muted);font-size:13px;min-width:3.5em;text-align:right}
+
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.keys{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+svg.chart{width:100%;height:auto;display:block;margin-top:12px}
+svg.chart .m{cursor:pointer}
+svg.chart text{fill:var(--muted);font-family:var(--font);font-size:12px}
+svg.chart text.on{fill:var(--ink);font-weight:500}
+
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kv div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kv span{display:block;font-size:12px;color:var(--muted)}
+.kv b{display:block;font-family:var(--font-d);font-size:26px;font-weight:400;letter-spacing:-.025em;line-height:1.25;margin-top:2px}
+.kv small{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-size:14px;margin:0}
+
+.tabs{display:flex;gap:8px;margin-top:20px}
+.tabs button{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:9999px;padding:6px 16px;cursor:pointer}
+.tabs button:hover{border-color:var(--line-2)}
+.tabs button[aria-selected="true"]{color:#fff;background:var(--ink-soft);border-color:var(--ink-soft)}
+:root[data-theme="dark"] .tabs button[aria-selected="true"]{color:var(--paper);background:var(--ink);border-color:var(--ink)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .tabs button[aria-selected="true"]{color:var(--paper);background:var(--ink);border-color:var(--ink)} }
+.cov td:not(:first-child),.cov th{text-align:left;white-space:normal}
+.ok{color:var(--accent-edge);font-weight:500} .part{color:var(--ink);font-weight:500;border:1px solid var(--line);border-radius:9999px;padding:0 8px}
+ul.an{margin:16px 0 0;padding-left:20px;font-size:14px;color:var(--ink-soft)} ul.an li{margin:6px 0}
+
+/* Clientes */
+.lock{max-width:420px;margin:48px 0}
+.lock form{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.lock input{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-radius:6px;padding:8px 12px;flex:1;min-width:180px}
+.lock input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.btn{font:inherit;font-size:14px;font-weight:500;color:#fff;background:var(--accent);border:1px solid var(--accent-edge);border-radius:9999px;padding:8px 18px;cursor:pointer}
+.btn.ghost{color:var(--ink);background:transparent;border-color:var(--line)}
+.msg{margin-top:10px;font-size:13px;color:var(--neg);min-height:1.2em}
+#mapa{height:480px;border-radius:10px;border:1px solid var(--line);margin-top:12px;z-index:0}
+.leaflet-container{font-family:var(--font);background:var(--band)}
+.leaflet-tile-pane{filter:grayscale(1) contrast(.94) brightness(1.03)}
+.leaflet-popup-content{font-size:13px;line-height:1.5;margin:12px 14px;min-width:220px}
+.leaflet-popup-content h4{margin:0 0 2px;font-family:var(--font-d);font-weight:500;font-size:16px}
+.leaflet-popup-content dl{display:grid;grid-template-columns:auto auto;gap:2px 14px;margin:8px 0 0}
+.leaflet-popup-content dt{color:#78716c} .leaflet-popup-content dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.cat{display:inline-block;font-size:12px;font-weight:500;border-radius:9999px;padding:0 8px;border:1px solid var(--line);white-space:nowrap}
+.cat.A{background:var(--wash);color:var(--accent-edge);border-color:transparent}
+.mx{border-collapse:separate;border-spacing:6px;width:100%;table-layout:fixed}
+.mx th{font-size:12px;font-weight:500;color:var(--muted);text-align:center}
+.mx td{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;vertical-align:top}
+.mx td b{display:block;font-family:var(--font-d);font-weight:400;font-size:24px;line-height:1.2}
+.mx td small{color:var(--muted);font-size:12px}
+.mx td.hi{background:var(--wash);border-color:transparent}
+.dotc{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid #0c0a09;margin-right:6px;vertical-align:-1px}
+table.t.cli td{font-size:13px} table.t.cli td small{color:var(--muted)}
+
+.band{margin-top:64px;background:var(--band);border:1px solid var(--line);border-radius:16px;padding:4px 24px 24px}
+.band .sec-head{padding-top:24px}
+.band section.panel{margin-top:16px}
+footer{margin-top:40px;font-size:12px;color:var(--ash)}
+@media (max-width:560px){ .wrap{padding:16px 16px 40px} section.panel{padding:18px} .band{padding:4px 14px 18px} }
+@media (prefers-reduced-motion:no-preference){ .hero h1{animation:rise .5s ease-out both} @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}} }
+</style>
+</head>
+<body>
+<!-- Página pública SIN datos: todo llega del Apps Script con la clave de cada persona. -->
+<p class="cargando" id="cargando" role="status">Cargando…</p>
+<main class="acceso" id="acceso" hidden>
+  <form id="acc-form" autocomplete="off">
+    <h1>Agua Inmaculada Chapultepec</h1>
+    <p>Tablero privado. Escribe tu clave de acceso.</p>
+    <label for="acc-clave">Clave</label>
+    <input id="acc-clave" type="password" autocomplete="current-password" required>
+    <button type="submit" id="acc-btn">Entrar</button>
+    <p class="acc-msg" id="acc-msg" role="alert"></p>
+  </form>
+</main>
+<div class="wrap" id="app" hidden>
+  <header>
+    <div class="brand" id="brand">Agua Inmaculada Chapultepec<small>Resultados del negocio</small></div>
+    <nav aria-label="Secciones"><a href="#resultados">Resultados</a><a href="#inventario">Inventario</a><a href="#actual">Mes actual</a></nav>
+    <div class="hd-der">
+      <div class="status" id="status"><span class="dot"></span><span>Cargando…</span></div>
+      <button class="btn-sal" id="salir" type="button" title="Olvida la clave en este dispositivo">Salir</button>
+      <button class="btn-act" id="actualizar" type="button" title="Lee las fotos nuevas de la libreta (desde la PC con el ayudante) y vuelve a leer el Google Sheet">↻ Actualizar</button>
+    </div>
+  </header>
+
+  <section class="panel lote" id="lote" hidden aria-live="polite"></section>
+
+  <div class="tabs" role="tablist" aria-label="Periodo">
+    <button role="tab" id="t-2026" aria-controls="tab-2026" aria-selected="true">2026</button>
+    <button role="tab" id="t-hist" aria-controls="tab-hist" aria-selected="false" tabindex="-1">Histórico</button>
+    <button role="tab" id="t-esp" aria-controls="tab-esp" aria-selected="false" tabindex="-1">Meses en espera</button>
+    <button role="tab" id="t-cli" aria-controls="tab-cli" aria-selected="false" tabindex="-1">Clientes</button>
+  </div>
+
+  <div id="tab-2026" role="tabpanel" aria-labelledby="t-2026">
+  <!-- ============ RESULTADOS (meses cerrados) ============ -->
+  <div id="resultados">
+    <div class="sec-head">
+      <div class="per" id="rango">Meses cerrados</div>
+      <label class="sel" for="periodo">Periodo <select id="periodo"></select></label>
+    </div>
+    <div class="hero"><h1 id="headline">&nbsp;</h1><p id="subline"></p></div>
+
+    <div class="grid">
+      <section class="panel">
+        <h2 id="er-title">Estado de resultados</h2>
+        <div class="tscroll"><table class="t er" id="er"></table></div>
+        <p class="note" id="warn" role="note" hidden></p>
+      </section>
+      <section class="panel mix" id="mix"></section>
+    </div>
+
+    <section class="panel">
+      <div class="chart-head"><h2 style="margin:0">Ingresos y gastos por mes</h2>
+        <div class="keys"><span><i style="background:var(--in)"></i>Ingresos</span><span><i style="background:var(--out)"></i>Gastos</span><span><i style="background:var(--util)"></i>Utilidad</span></div></div>
+      <svg class="chart" id="chart" role="img" aria-label="Ingresos y gastos por mes"></svg>
+    </section>
+
+    <section class="panel" id="gastos"></section>
+    <section class="panel" id="clientes"></section>
+    <section class="panel" id="caja"></section>
+  </div>
+
+  <!-- ============ DATOS GENERALES: INVENTARIO (pestaña INVENTARIO) ============ -->
+  <section class="panel" id="inventario"></section>
+
+  <!-- ============ MES ACTUAL (solo libreta) ============ -->
+  <div class="band" id="actual"></div>
+  </div>
+
+  <!-- ============ HISTÓRICO 2024–2025 (documento "Analisis de Purificadora") ============ -->
+  <div id="tab-hist" role="tabpanel" aria-labelledby="t-hist" hidden></div>
+
+  <!-- ============ MESES EN ESPERA (terminados, sin ligar en EDO RESULTADOS) ============ -->
+  <div id="tab-esp" role="tabpanel" aria-labelledby="t-esp" hidden></div>
+
+  <!-- ============ CLIENTES (protegida con clave: direcciones, precios y márgenes) ============ -->
+  <div id="tab-cli" role="tabpanel" aria-labelledby="t-cli" hidden></div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+/* ===== Configuración ===== */
+const CONFIG = {
+  SOURCE_URL: "https://script.google.com/macros/s/AKfycbzl5Pf71xww5yEWpWYpT6BcoKDaXhKh_N5KbpM59zlQbA5Si7BfAVsWsAkitYrW0GZDhw/exec",                  // URL /exec del Apps Script
+  // Sin clave aquí: cada persona escribe la suya al entrar (se guarda solo en su navegador). Ver "Privacidad" en CLAUDE.md.
+  REFRESH_MIN: 5,
+  LOCAL_URL: "http://127.0.0.1:8765",   // ayudante de la PC (scripts/servidor_local.py) que procesa las fotos de la libreta
+  DIAS_LABORALES: [1,2,3,4,5],     // lunes a viernes (0=domingo … 6=sábado)
+  TOP_CLIENTES: 10,
+  // Canales que no son un cliente con nombre (se muestran aparte)
+  CANALES: /^(A DOMICILIO|VENTANILLA|GARRAFON|RUTA EFECTIVO)/,
+  // Agrupación de conceptos de gasto
+  CATEGORIAS: [
+    ["Sueldo ventanilla", /^SUELDO VENTANILLA/],
+    ["Sueldo repartidor", /^SUELDO REPARTIDOR/],
+    ["Otros sueldos y bonos", /^SUELDO|^BONO/],
+    ["Agua (pipas)", /PIPA/],
+    ["Renta del local", /^RENTA/],
+    ["Camioneta", /CAMIONETA|ACEITE|LLANTA|MECANIC/],
+    ["Insumos y garrafones", /INSUMO|GARRAFON|IMPRENTA|TAPA|SELLO/],
+    ["Servicios y limpieza", /LUZ|IZZI|INTERNET|LIMPIEZA|TELEFONO/],
+    ["Imprevistos", /IMPREVIST/]
+  ]
+};
+
+/* Este archivo no lleva datos del negocio ni claves (el repositorio público solo contiene esta página).
+   La clave de lectura la escribe cada persona y se valida en el Apps Script. */
+let KEY=null; try{ KEY=localStorage.getItem("aguaClave")||null; }catch(e){}
+
+/* ===== Utilidades ===== */
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const nice = s => String(s).toLowerCase().replace(/(^|[\s/(])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());
+const fmt = new Intl.NumberFormat("es-MX",{style:"currency",currency:"MXN",maximumFractionDigits:0});
+const money = n => fmt.format(Math.round(n||0));
+const int = n => Math.round(n||0).toLocaleString("es-MX");
+const pct = n => isFinite(n) ? (n*100).toLocaleString("es-MX",{maximumFractionDigits:1})+"%" : "—";
+const sum = a => a.reduce((x,y)=>x+(y||0),0);
+const cls = n => n<0 ? "neg" : n>0 ? "pos" : "mut";
+const $ = id => document.getElementById(id);
+const categoria = c => (CONFIG.CATEGORIAS.find(([,re])=>re.test(c))||["Otros"])[0];
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+let DATA=null, SEL=null, SOURCE="snap";
+
+function norm(d){
+  d = JSON.parse(JSON.stringify(d));
+  const ing=d.ingresos||{}, gas=d.gastos||{};
+  const anio = d.anio || 2026, hoy = new Date();
+  const mesHoy = hoy.getFullYear()===anio ? hoy.getMonth() : hoy.getFullYear()>anio ? 12 : -1;
+  const parts = (o,i) => sum(Object.entries(o).filter(([k])=>k!=="TOTAL").map(([,v])=>v[i]));
+  const cerradoEdr = MESES.map((_,i)=>((ing.TOTAL||[])[i]||parts(ing,i)||0)!==0 || ((gas.TOTAL||[])[i]||parts(gas,i)||0)!==0);
+  // Resultados muestra solo meses cerrados en EDO RESULTADOS. Un mes terminado sin cerrar va a la pestaña
+  // "Meses en espera" (d.espera, calculado por el Apps Script); ya no se mezcla aquí como preliminar.
+  const prelim = MESES.map(()=>false);
+  const tI = ing.TOTAL || MESES.map((_,i)=>parts(ing,i));
+  const tG = gas.TOTAL || MESES.map((_,i)=>parts(gas,i));
+  const util = MESES.map((_,i)=>(tI[i]||0)-(tG[i]||0));
+  const cerrado = MESES.map((_,i)=>cerradoEdr[i] || prelim[i]);
+  const chk = {};
+  ["ingresos","gastos"].forEach(sec=>{ const o=d[sec]||{}, t=sec==="ingresos"?tI:tG;
+    chk[sec] = MESES.map((_,i)=>{ const p=parts(o,i); return Math.abs(p-(t[i]||0))>1 ? {parts:p,total:t[i]} : null; }); });
+  const ultimo = cerrado.lastIndexOf(true);
+  const diario = (d.diario||[]).slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  // Mes actual: el mes del calendario (el 1 de octubre pasa solo a octubre y septiembre queda en el histórico).
+  // Fuera del año del Sheet: el más reciente entre (último cerrado + 1) y la última nota cargada.
+  const ultNota = diario.length ? diario[diario.length-1].fecha : null;
+  let actual = Math.min(11, ultimo+1);
+  if (ultNota && Number(ultNota.slice(0,4))===anio) actual = Math.max(actual, Number(ultNota.slice(5,7))-1);
+  if (mesHoy>=0 && mesHoy<=11) actual = mesHoy;
+  return {...d, anio, diario, tI, tG, util, cerrado, prelim, chk, ultimo, actual, inventario: d.inventario || null, espera: d.espera || [],
+    ingK:Object.keys(ing).filter(k=>k!=="TOTAL"), gasK:Object.keys(gas).filter(k=>k!=="TOTAL"),
+    detalle: d.detalle || {gastos:{},clientes:{}}, gastos_notas: d.gastos_notas || {}};
+}
+
+function meses(){ return SEL==="ytd" ? MESES.map((_,k)=>k).filter(k=>DATA.cerrado[k]) : [Number(SEL)]; }
+const pickM = (arr, ms) => sum(ms.map(k=>(arr||[])[k]||0));
+
+/* ===== Selector ===== */
+function buildSelect(){
+  const s=$("periodo"), prev=SEL;
+  s.innerHTML = `<option value="ytd">Actual ${DATA.anio}</option>` +
+    MESES.map((m,i)=>DATA.cerrado[i]?`<option value="${i}">${cap(m)}${DATA.prelim[i]?" (preliminar)":""}</option>`:"").join("");
+  s.value = [...s.options].some(o=>o.value===prev) ? prev : "ytd";
+  SEL = s.value;
+  const pre = MESES.filter((_,i)=>DATA.prelim[i]), uE = DATA.cerrado.map((c,i)=>c&&!DATA.prelim[i]).lastIndexOf(true);
+  $("rango").innerHTML = (uE>=0 ? `Meses cerrados: <b>enero a ${MESES[uE]} ${DATA.anio}</b>` : "Aún no hay meses cerrados") +
+    (pre.length ? ` · <span class="mut">${pre.join(", ")} preliminar</span>` : "");
+}
+
+/* ===== Resultados ===== */
+function renderResultados(){
+  const ytd = SEL==="ytd", ms = meses(), i = ytd ? null : ms[0];
+  const I=pickM(DATA.tI,ms), G=pickM(DATA.tG,ms), U=I-G, M=I?U/I:NaN;
+  const nm = ytd ? `De enero a ${MESES[DATA.ultimo]}` : `En ${MESES[i]}`;
+  $("headline").innerHTML = U>=0
+    ? `${nm} quedaron <span class="amt pos">${money(U)}</span> de utilidad.`
+    : `${nm} se gastó más de lo que se vendió: <span class="amt neg">${money(-U)}</span> de pérdida.`;
+  let sub = `Ingresos de ${money(I)} contra gastos de ${money(G)}; margen de ${pct(M)}.`;
+  if (!ytd && i>0 && DATA.cerrado[i-1]){
+    const d = U-DATA.util[i-1]; sub += ` Frente a ${MESES[i-1]}, la utilidad ${d>=0?"subió":"bajó"} ${money(Math.abs(d))}.`;
+    const dg = DATA.tG[i]-DATA.tG[i-1]; if (dg>0 && DATA.tG[i-1]) sub += ` Los gastos crecieron ${pct(dg/DATA.tG[i-1])}.`;
+  }
+  if (ytd) sub += ` Promedio mensual de utilidad: ${money(U/ms.length)}.`;
+  $("subline").textContent = sub;
+
+  // Tabla EdR
+  const cols = ytd
+    ? [["Acumulado", a=>pickM(a,ms)], ["Promedio mes", a=>pickM(a,ms)/ms.length]]
+    : [[cap(MESES[i]), a=>a[i]||0],
+       ...(i>0 && DATA.cerrado[i-1] ? [[cap(MESES[i-1]), a=>a[i-1]||0], ["Variación", a=>(a[i]||0)-(a[i-1]||0), true]] : []),
+       ["Acumulado año", a=>sum(a.slice(0,i+1))]];
+  $("er-title").textContent = ytd ? `Estado de resultados enero – ${MESES[DATA.ultimo]}` : `Estado de resultados de ${MESES[i]}`;
+  const row = (label, arr, kind="", signed=false, inv=false) =>
+    `<tr class="${kind}"><td>${label}</td>${cols.map(([,f,isVar])=>{ const v=f(arr); const c=(isVar||signed)?cls(isVar&&inv?-v:v):"";
+      return `<td class="${c}">${isVar&&v>0?"+":""}${money(v)}</td>`; }).join("")}</tr>`;
+  let t = `<thead><tr><th>Concepto</th>${cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead><tbody>`;
+  t += `<tr class="sec"><td colspan="${cols.length+1}">Ingresos</td></tr>`;
+  DATA.ingK.forEach(k=> t += row(nice(k), DATA.ingresos[k], "sub"));
+  t += row("Total ingresos", DATA.tI, "tot");
+  t += `<tr class="sec"><td colspan="${cols.length+1}">Gastos</td></tr>`;
+  DATA.gasK.forEach(k=> t += row(nice(k), DATA.gastos[k], "sub", false, true));
+  t += row("Total gastos", DATA.tG, "tot", false, true);
+  t += row("Utilidad o pérdida", DATA.util, "net", true);
+  t += `<tr class="mg"><td>Margen sobre ingresos</td>${cols.map(([,f,isVar])=>isVar?"<td></td>":`<td>${pct(f(DATA.util)/f(DATA.tI))}</td>`).join("")}</tr></tbody>`;
+  $("er").innerHTML = t;
+
+  const warns=[];
+  const pre = ms.filter(k=>DATA.prelim[k]);
+  if (pre.length) warns.push(`<strong>${pre.map(k=>cap(MESES[k])).join(", ")}: preliminar.</strong> Todavía no se cierra en EDO RESULTADOS; las cifras salen de las pestañas INGRESOS y GASTOS del mes (efectivo de la libreta más lo capturado a mano). Revisa que estén todas las transferencias y pagos con tarjeta; al cerrarlo en EDO RESULTADOS se usan esas cifras.`);
+  ["ingresos","gastos"].forEach(sec=>ms.forEach(k=>{ const w=DATA.chk[sec][k]; if(w)
+    warns.push(`<strong>Revisar en el Sheet.</strong> ${cap(MESES[k])}: las formas de pago de ${sec} suman ${money(w.parts)}, pero el total dice ${money(w.total)} (diferencia de ${money(w.total-w.parts)}); el tablero usa el total del Sheet.`); }));
+  $("warn").innerHTML = warns.join(" "); $("warn").hidden = !warns.length;
+
+  // Formas de pago
+  const mix = (title, keys, obj, colors, total) => {
+    const parts = keys.map((k,j)=>({k, v:pickM(obj[k],ms), c:colors[j%colors.length]})).filter(p=>p.v>0);
+    return `<div><h3>${title}</h3><div class="bar">${parts.map(p=>`<span style="width:${p.v/total*100}%;background:${p.c}"></span>`).join("")}</div>
+      <ul class="legend">${parts.map(p=>`<li><span><i style="background:${p.c}"></i>${nice(p.k)}</span><span>${money(p.v)} · ${pct(p.v/total)}</span></li>`).join("")}</ul></div>`;
+  };
+  $("mix").innerHTML = `<h2>Cómo entra y sale el dinero</h2>` +
+    mix("Ingresos por forma de cobro", DATA.ingK, DATA.ingresos, ["var(--in)","var(--in-soft)","var(--muted)"], I) +
+    mix("Gastos por forma de pago", DATA.gasK, DATA.gastos, ["var(--out)","var(--out-soft)","var(--ink)"], G);
+
+  drawChart(ytd ? -1 : i);
+  renderGastos(ms, ytd);
+  renderClientes(ms, ytd);
+  renderCaja(ms);
+}
+
+function hbars(items, total, color, fmtVal){
+  const max = Math.max(...items.map(x=>x.v),1);
+  return `<div class="hbars">${items.map(x=>`<div class="hb"><span class="lbl" title="${esc(x.k)}">${esc(x.k)}</span>
+    <span class="trk"><span style="width:${x.v/max*100}%;background:${color}"></span></span><span class="val">${fmtVal(x)}</span></div>`).join("")}</div>`;
+}
+
+function renderGastos(ms, ytd){
+  const g = DATA.detalle.gastos;
+  const conceptos = Object.keys(g).map(k=>({k, v:pickM(g[k],ms), cat:categoria(k)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  const total = sum(conceptos.map(x=>x.v));
+  if(!total){ $("gastos").innerHTML = `<h2>En qué se gasta</h2><p class="empty">No hay detalle de gastos en las pestañas mensuales para este periodo.</p>`; return; }
+  const cats = {}; conceptos.forEach(x=>cats[x.cat]=(cats[x.cat]||0)+x.v);
+  const catItems = Object.entries(cats).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+  const top = catItems[0];
+  const edr = pickM(DATA.tG, ms);
+  const porMes = ms.map(k=>({k, d:sum(Object.values(g).map(a=>a[k]||0))-(DATA.tG[k]||0)})).filter(x=>Math.abs(x.d)>1);
+  const dif = Math.abs(edr-total)>1 ? `<p class="note">El detalle de las pestañas de gastos suma ${money(total)} y el estado de resultados ${money(edr)}. ` +
+    `${porMes.length?`La diferencia está en ${porMes.map(x=>`${MESES[x.k]} (la pestaña GASTOS tiene ${money(Math.abs(x.d))} ${x.d>0?"más":"menos"} que EDO RESULTADOS)`).join(", ")}.`:""} Los porcentajes de esta sección usan el detalle de las pestañas.</p>` : "";
+  $("gastos").innerHTML = `<h2>En qué se gasta</h2>
+    <p class="lead">${esc(top.k)} se lleva ${pct(top.v/total)} del gasto ${ytd?`de enero a ${MESES[DATA.ultimo]}`:`de ${MESES[ms[0]]}`}. Porcentajes sobre ${money(total)}.</p>
+    <div class="grid2">
+      <div>${hbars(catItems, total, "var(--out)", x=>pct(x.v/total))}</div>
+      <div class="tscroll"><table class="t"><thead><tr><th>Concepto</th><th>Monto</th><th>%</th></tr></thead><tbody>
+        ${conceptos.map(x=>`<tr><td>${nice(x.k)}<br><small class="mut">${x.cat}</small></td><td>${money(x.v)}</td><td>${pct(x.v/total)}</td></tr>`).join("")}
+      </tbody></table></div>
+    </div>${dif}`;
+}
+
+function renderClientes(ms, ytd){
+  const c = DATA.detalle.clientes;
+  const all = Object.keys(c).map(k=>({k, gf:pickM(c[k].gf,ms), v:pickM(c[k].imp,ms)})).filter(x=>x.v>0||x.gf>0);
+  const GF = sum(all.map(x=>x.gf)), IMP = sum(all.map(x=>x.v));
+  if(!IMP){ $("clientes").innerHTML = `<h2>Mayores clientes</h2><p class="empty">No hay ventas por cliente en las pestañas mensuales para este periodo.</p>`; return; }
+  const grp = k => /^VENTANILLA/.test(k) ? "VENTANILLA" : /^GARRAFON/.test(k) ? "GARRAFÓN NUEVO" : /^RUTA EFECTIVO/.test(k) ? "RUTA EFECTIVO (LIBRETA)" : k;
+  const cmap = {}; all.filter(x=>CONFIG.CANALES.test(x.k)).forEach(x=>{ const g=grp(x.k); cmap[g]=cmap[g]||{k:g,gf:0,v:0}; cmap[g].gf+=x.gf; cmap[g].v+=x.v; });
+  const canales = Object.values(cmap);
+  const nombrados = all.filter(x=>!CONFIG.CANALES.test(x.k)).sort((a,b)=>b.gf-a.gf || b.v-a.v);
+  const top = nombrados.slice(0, CONFIG.TOP_CLIENTES), resto = nombrados.slice(CONFIG.TOP_CLIENTES);
+  const topGf = sum(top.map(x=>x.gf));
+  const canalTxt = canales.sort((a,b)=>b.gf-a.gf).map(x=>`${nice(x.k)} ${pct(x.gf/GF)}`).join(", ");
+  const fila = x => `<tr><td>${nice(x.k)}</td><td>${int(x.gf)}</td><td>${pct(x.gf/GF)}</td><td>${money(x.v)}</td><td>${pct(x.v/IMP)}</td></tr>`;
+  $("clientes").innerHTML = `<h2>Mayores clientes</h2>
+    <p class="lead">Los ${top.length} clientes más grandes consumieron ${int(topGf)} garrafones, ${pct(topGf/GF)} del total vendido ${ytd?`de enero a ${MESES[DATA.ultimo]}`:`en ${MESES[ms[0]]}`} (${int(GF)}).</p>
+    <div class="grid2">
+      <div>${hbars(top.map(x=>({k:nice(x.k),v:x.gf})), GF, "var(--in)", x=>`${int(x.v)} gf`)}</div>
+      <div class="tscroll"><table class="t"><thead><tr><th>Cliente</th><th>Garrafones</th><th>% consumo</th><th>Ingreso</th><th>% ingreso</th></tr></thead><tbody>
+        ${top.map(fila).join("")}
+        ${resto.length?`<tr class="rest"><td>Otros ${resto.length} clientes</td><td>${int(sum(resto.map(x=>x.gf)))}</td><td>${pct(sum(resto.map(x=>x.gf))/GF)}</td><td>${money(sum(resto.map(x=>x.v)))}</td><td>${pct(sum(resto.map(x=>x.v))/IMP)}</td></tr>`:""}
+        ${canales.map(x=>`<tr class="rest"><td>${nice(x.k)}</td><td>${int(x.gf)}</td><td>${pct(x.gf/GF)}</td><td>${money(x.v)}</td><td>${pct(x.v/IMP)}</td></tr>`).join("")}
+      </tbody></table></div>
+    </div>
+    ${canalTxt?`<p class="lead" style="margin:14px 0 0">Además de los clientes con nombre: ${canalTxt} de los garrafones.</p>`:""}`;
+}
+
+function renderCaja(ms){
+  const cj = DATA.caja || {};
+  const items = Object.keys(cj).map(k=>({k, v:pickM(cj[k],ms)})).filter(x=>x.v!==0);
+  $("caja").innerHTML = `<h2>Caja y movimientos de socios</h2>` + (items.length
+    ? `<div class="kv" style="margin-top:12px">${items.map(x=>`<div><span>${nice(x.k)}</span><b class="${x.k.includes("SALDO")?cls(x.v):""}">${money(x.v)}</b></div>`).join("")}</div>`
+    : `<p class="empty">No hay movimientos de caja ni de socios en este periodo.</p>`);
+}
+
+function drawChart(sel){
+  const W=960,H=300,padL=56,padR=12,padT=16,padB=34, cw=(W-padL-padR)/12, bw=Math.min(18,cw*.28);
+  const max=Math.max(...DATA.tI,...DATA.tG,1), minU=Math.min(0,...DATA.util);
+  const top=Math.ceil(max/10000)*10000, bot=Math.floor(minU/10000)*10000;
+  const y=v=>padT+(top-v)/(top-bot)*(H-padT-padB);
+  const step=(top-bot)>60000?20000:10000;
+  let g="";
+  for(let v=bot;v<=top;v+=step){
+    g+=`<line x1="${padL}" x2="${W-padR}" y1="${y(v)}" y2="${y(v)}" stroke="${v===0?"var(--muted)":"var(--line)"}"/>`;
+    g+=`<text x="${padL-8}" y="${y(v)+4}" text-anchor="end">${v===0?"0":(v/1000)+"k"}</text>`;
+  }
+  const pts=[];
+  MESES.forEach((m,i)=>{
+    const cx=padL+cw*i+cw/2, on=i===sel, act=DATA.cerrado[i], op=(sel<0||on?1:.45)*(DATA.prelim[i]?.55:1);
+    let b="";
+    if(act){
+      b+=`<rect x="${cx-bw-1}" y="${y(DATA.tI[i])}" width="${bw}" height="${y(0)-y(DATA.tI[i])}" fill="var(--in)" opacity="${op}" rx="2"/>`;
+      b+=`<rect x="${cx+1}" y="${y(DATA.tG[i])}" width="${bw}" height="${y(0)-y(DATA.tG[i])}" fill="var(--out)" opacity="${op}" rx="2"/>`;
+      pts.push([cx,y(DATA.util[i]),DATA.util[i],on]);
+    } else b+=`<rect x="${cx-bw-1}" y="${y(0)-3}" width="${bw*2+2}" height="3" fill="var(--line)"/>`;
+    g+=`<g class="m" ${act?`tabindex="0" role="button" aria-label="Ver ${m}" data-i="${i}"`:""}>
+      <rect x="${padL+cw*i+2}" y="${padT}" width="${cw-4}" height="${H-padT-padB+22}" fill="${on?"var(--in-soft)":"transparent"}" opacity="${on?.35:1}" rx="6"/>
+      ${b}<text x="${cx}" y="${H-10}" text-anchor="middle" class="${on?"on":""}">${cap(m).slice(0,3)}${DATA.prelim[i]?"*":""}</text></g>`;
+  });
+  if(pts.length>1) g+=`<polyline points="${pts.map(p=>p[0]+","+p[1]).join(" ")}" fill="none" stroke="var(--util)" stroke-width="2"/>`;
+  pts.forEach(p=>g+=`<circle cx="${p[0]}" cy="${p[1]}" r="${p[3]?6:4}" fill="${p[2]<0?"var(--neg)":"var(--util)"}" stroke="var(--panel)" stroke-width="2"/>`);
+  const svg=$("chart"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.innerHTML=g;
+  svg.querySelectorAll(".m[data-i]").forEach(el=>{
+    const go=()=>{ SEL=el.dataset.i; $("periodo").value=SEL; renderResultados(); };
+    el.addEventListener("click",go);
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+  });
+}
+
+/* ===== Datos generales: inventario de garrafones ===== */
+function renderInventario(){
+  const inv = DATA.inventario, box = $("inventario");
+  if(!inv || !inv.tipos || !inv.tipos.length){
+    box.innerHTML = `<h2>Inventario de garrafones</h2><p class="empty">Aún no hay inventario en la pestaña INVENTARIO del Sheet.</p>`; return;
+  }
+  const tipos = inv.tipos.slice().sort((a,b)=>b.cantidad-a.cantidad), total = sum(tipos.map(t=>t.cantidad));
+  const fa = inv.actualizado ? (([y,m,d])=>new Date(y,m-1,d).toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"}))(inv.actualizado.split("-").map(Number)) : "";
+  box.innerHTML = `<h2>Inventario de garrafones</h2>
+    <p class="lead">${int(total)} garrafones en total${fa?`, último movimiento el ${fa}`:""}. Para agregar o dar de baja, se anota un renglón en la pestaña INVENTARIO (+ entran, − salen).</p>
+    <div class="grid2">
+      <div>${hbars(tipos.map(t=>({k:nice(t.garrafon), v:t.cantidad})), total, "var(--in)", x=>`${int(x.v)} · ${pct(x.v/total)}`)}</div>
+      <div class="tscroll"><table class="t"><thead><tr><th>Garrafón</th><th>Cantidad</th></tr></thead><tbody>
+        ${tipos.map(t=>{ const det=Object.entries(t.detalle||{}).filter(([,v])=>v);
+          return `<tr><td>${nice(t.garrafon)}${det.length?`<br><small class="mut">${det.map(([k,v])=>`${int(v)} ${k.toLowerCase()}`).join(" · ")}</small>`:""}</td><td>${int(t.cantidad)}</td></tr>`; }).join("")}
+        <tr style="font-weight:700"><td>Total</td><td>${int(total)}</td></tr>
+      </tbody></table></div>
+    </div>`;
+}
+
+/* ===== Mes actual (solo libreta) ===== */
+function renderActual(){
+  const m = DATA.actual, anio = DATA.anio, key = `${anio}-${String(m+1).padStart(2,"0")}`;
+  const dm = DATA.diario.filter(x=>x.fecha.slice(0,7)===key);   // incluye días no laborados (solo para la tabla)
+  const dd = dm.filter(x=>!x.no_laborado);
+  const box = $("actual");
+  const head = `<div class="sec-head"><div class="per">Mes actual · solo notas de la libreta</div></div>`;
+  if(!dd.length){
+    box.innerHTML = head + `<div class="hero"><h2 class="big">${cap(MESES[m])} ${anio}: aún sin notas cargadas.</h2>
+      <p>Guarda las fotos en la carpeta y corre /procesar-fotos en Claude Code.</p></div>`; return;
+  }
+  const S=k=>sum(dd.map(x=>x[k]||0)), last=dd[dd.length-1];
+  const fd=f=>{const [y,mo,d]=f.split("-").map(Number); return new Date(y,mo-1,d).toLocaleDateString("es-MX",{weekday:"short",day:"numeric"});};
+  // días laborales transcurridos del mes
+  const hoy=new Date(), fin=(hoy.getFullYear()===anio&&hoy.getMonth()===m)?hoy.getDate():new Date(anio,m+1,0).getDate();
+  let lab=0; for(let d=1; d<=fin; d++) if(CONFIG.DIAS_LABORALES.includes(new Date(anio,m,d).getDay())) lab++;
+  const gf = S("ventanilla_garrafones")+S("ruta_garrafones");
+  const efectivo = S("ventanilla_importe")+S("ruta_efectivo");
+  const gn = Object.entries(DATA.gastos_notas[key]||{}).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+  const gT = sum(gn.map(x=>x.v)) || S("gastos");
+
+  const W=960,H=150,pl=8,pb=24, gap=(W-pl*2)/Math.max(dd.length,6), bw=Math.min(34,gap*.6);
+  const mx=Math.max(...dd.map(x=>x.ventanilla_garrafones+x.ruta_garrafones),1), hy=v=>v/mx*(H-pb-18);
+  let g=""; dd.forEach((x,k)=>{ const cx=pl+gap*k+gap/2, hv=hy(x.ventanilla_garrafones), hr=hy(x.ruta_garrafones);
+    g+=`<rect x="${cx-bw/2}" y="${H-pb-hr}" width="${bw}" height="${hr}" fill="var(--in)" rx="2"/>`;
+    g+=`<rect x="${cx-bw/2}" y="${H-pb-hr-hv}" width="${bw}" height="${hv}" fill="var(--in-soft)" rx="2"/>`;
+    g+=`<text x="${cx}" y="${H-pb-hr-hv-5}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${x.ventanilla_garrafones+x.ruta_garrafones}</text>`;
+    g+=`<text x="${cx}" y="${H-6}" text-anchor="middle">${fd(x.fecha)}</text>`; });
+
+  box.innerHTML = head + `
+    <div class="hero"><h2 class="big">${cap(MESES[m])} lleva <span class="amt pos">${money(efectivo)}</span> en efectivo y <span class="amt">${money(gT)}</span> de gastos anotados.</h2>
+      <p>${dd.length} ${dd.length===1?"nota cargada":"notas cargadas"} de ${lab} días laborales transcurridos. Las transferencias y pagos con tarjeta se suman al cierre del mes, cuando ${MESES[m]} pasa a Resultados.</p></div>
+    <section class="panel">
+      <div class="kv">
+        <div><span>Ventanilla</span><b>${money(S("ventanilla_importe"))}</b><small>${int(S("ventanilla_garrafones"))} garrafones</small></div>
+        <div><span>Ruta en efectivo</span><b>${money(S("ruta_efectivo"))}</b><small>${int(S("ruta_garrafones"))} garrafones entregados</small></div>
+        <div><span>Gastos anotados</span><b>${money(gT)}</b><small>pagados de caja</small></div>
+        <div><span>Caja al cierre</span><b>${money(last.caja_total-(last.corte||0))}</b><small>${fd(last.fecha)}${last.corte?` · después del corte`:""}</small></div>
+        <div><span>Cortes de caja</span><b>${money(S("corte"))}</b><small>retirado por el dueño</small></div>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="chart-head"><h2 style="margin:0">Garrafones por día</h2>
+        <div class="keys"><span><i style="background:var(--in)"></i>Ruta</span><span><i style="background:var(--in-soft)"></i>Ventanilla</span></div></div>
+      <svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Garrafones por día">${g}</svg>
+    </section>
+    <div class="grid2">
+      <section class="panel"><h2>Gastos anotados</h2><p class="lead">En qué se fue el efectivo de caja este mes.</p>
+        ${gn.length ? hbars(gn.map(x=>({k:nice(x.k),v:x.v})), gT, "var(--out)", x=>`${money(x.v)} · ${pct(x.v/gT)}`) : `<p class="empty">Sin gastos anotados.</p>`}
+      </section>
+      <section class="panel"><h2>Día por día</h2><p class="lead">Del más reciente al más antiguo.</p>
+        <div class="tscroll"><table class="t"><thead><tr><th>Día</th><th>Ventanilla</th><th>Ruta</th><th>Gastos</th><th>Caja</th><th>Corte de caja</th><th>Cuadre</th></tr></thead><tbody>
+        ${dm.slice().reverse().map(x=> x.no_laborado
+          ? `<tr><td>${fd(x.fecha)}</td><td colspan="6" class="mut">${esc(x.nota||"No se trabajó")}</td></tr>`
+          : `<tr><td>${fd(x.fecha)}</td><td>${money(x.ventanilla_importe)}<br><small class="mut">${x.ventanilla_garrafones} gf</small></td><td>${money(x.ruta_efectivo)}<br><small class="mut">${x.ruta_garrafones} gf</small></td><td>${money(x.gastos)}</td><td>${money(x.caja_total)}</td><td>${x.corte?money(x.corte):"—"}</td><td class="${x.cuadra?"pos":"neg"}" ${x.nota?`title="${esc(x.nota)}"`:""}>${x.cuadra?"Cuadra":"No cuadra"}${x.nota?`<br><small class="mut">${esc(x.nota)}</small>`:""}</td></tr>`).join("")}
+        </tbody></table></div>
+      </section>
+    </div>`;
+}
+
+/* ===== Histórico 2024–2025 =====
+   Copia del documento de Google Sheets "Analisis de Purificadora" (leído el 28-sep-2026).
+   Meses: septiembre 2024 → diciembre 2025. null = sin dato en el documento. */
+// El histórico 2024–2025 ya no vive en este archivo: llega del Apps Script (constante HIST de Code.gs) con los demás datos.
+let HIST = { fuente:"", meses:[], ventanilla:[], precioVentanilla:0, ventanilla2026Doc:{}, ruta:[], rutaParcial:[], gastos:{}, gastosIncompletos:[] };
+
+const mesCorto = ([y,m]) => `${cap(MESES[m]).slice(0,3)} ${String(y).slice(2)}`;
+const mesLargo = ([y,m]) => `${MESES[m]} ${y}`;
+
+// Columnas (apiladas si hay varias capas) con tooltip por mes, bandas de "sin dato" y separadores de año.
+function columnas(o){
+  const n=o.labels.length, W=960, H=270, pl=8, pr=8, pt=26, pb=30, cw=(W-pl-pr)/n, bw=Math.min(30,cw*.62);
+  const tot=i=>sum(o.capas.map(c=>c.v[i]||0)), max=Math.max(...o.labels.map((_,i)=>tot(i)),1)*1.08;
+  const y=v=>pt+(1-v/max)*(H-pt-pb), x0=i=>pl+cw*i;
+  let g="";
+  (o.bandas||[]).forEach(b=>{ const x=x0(b.desde), w=cw*(b.hasta-b.desde+1);
+    g+=`<rect x="${x}" y="${pt-18}" width="${w}" height="${H-pb-pt+18}" fill="var(--line)" opacity=".45" rx="6"/>`;
+    g+=`<text x="${x+w/2}" y="${pt-4}" text-anchor="middle">${esc(b.texto)}</text>`; });
+  (o.anios||[]).forEach(([i,a])=>{ if(i>0) g+=`<line x1="${x0(i)}" x2="${x0(i)}" y1="${pt-18}" y2="${H-pb+4}" stroke="var(--line)" stroke-dasharray="3 3"/>`;
+    g+=`<text x="${x0(i)+4}" y="${H-pb+26}" style="fill:var(--ink);font-weight:700">${a}</text>`; });
+  g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--muted)"/>`;
+  o.labels.forEach((lb,i)=>{
+    // mes parcial/incompleto: barra punteada (sin relleno), para no confundirla con otra serie en la paleta de grises
+    const cx=x0(i)+cw/2, dim=(o.atenuar||[]).includes(i); let acc=0, r="";
+    o.capas.forEach(c=>{ const v=c.v[i]; if(!v) return; const y0=y(acc), y1=y(acc+v), h=Math.max(1,y0-y1-(acc?2:0));
+      r+= dim ? `<rect x="${cx-bw/2+.75}" y="${y1+.75}" width="${bw-1.5}" height="${Math.max(1,h-1.5)}" fill="var(--panel)" stroke="${c.fill}" stroke-width="1.5" stroke-dasharray="3 2" rx="2"/>`
+              : `<rect x="${cx-bw/2}" y="${y1}" width="${bw}" height="${h}" fill="${c.fill}" rx="2"/>`; acc+=v; });
+    const lbl=(o.etiquetas||[]).includes(i) && tot(i) ? `<text x="${cx}" y="${y(tot(i))-5}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${o.fmt(tot(i))}</text>` : "";
+    g+=`<g><title>${esc(o.tip(i))}</title><rect x="${x0(i)}" y="${pt-18}" width="${cw}" height="${H-pt}" fill="transparent"/>${r}${lbl}
+        <text x="${cx}" y="${H-pb+13}" text-anchor="middle">${lb}</text></g>`; });
+  return `<svg class="chart" viewBox="0 0 ${W} ${H+12}" role="img" aria-label="${esc(o.aria)}">${g}</svg>`;
+}
+
+// 2026 en vivo desde MATRIZ CONCENTRADO (el Sheet del dashboard), con los mismos criterios que la pestaña 2026:
+// mes cerrado en EDO RESULTADOS → pestañas mensuales (garrafones por cliente); mes sin cerrar con notas de libreta →
+// DIARIO (ruta = todas las entregas, porque la ruta en efectivo de la libreta no lleva garrafones por cliente).
+function serie2026(){
+  if(!DATA) return [];
+  const anio=DATA.anio, hoy=new Date(), ult = hoy.getFullYear()===anio ? hoy.getMonth() : hoy.getFullYear()>anio ? 11 : -1;
+  const cli=DATA.detalle.clientes||{}, out=[];
+  for(let k=0;k<=ult;k++){
+    const key=`${anio}-${String(k+1).padStart(2,"0")}`, dd=DATA.diario.filter(x=>x.fecha.slice(0,7)===key && !x.no_laborado);
+    let vent=0, ruta=0, fuente;
+    const cerradoEdr = DATA.cerrado[k] && !DATA.prelim[k];
+    if(dd.length && !cerradoEdr){ vent=sum(dd.map(x=>x.ventanilla_garrafones)); ruta=sum(dd.map(x=>x.ruta_garrafones)); fuente="libreta"; }
+    else { Object.entries(cli).forEach(([c,v])=>{ const g=(v.gf||[])[k]||0; if(/^RUTA EFECTIVO/.test(c)) return;
+             if(/^(VENTANILLA|GARRAFON)/.test(c)) vent+=g; else ruta+=g; }); fuente="pestañas"; }
+    if(vent+ruta>0) out.push({y:anio, m:k, vent, ruta, fuente, enCurso:k===hoy.getMonth()&&hoy.getFullYear()===anio});
+  }
+  // mes con muy pocos garrafones (menos de la mitad de la mediana) = registro incompleto
+  const tots=out.filter(x=>!x.enCurso).map(x=>x.vent+x.ruta).sort((a,b)=>a-b), med=tots.length?tots[Math.floor(tots.length/2)]:0;
+  out.forEach(x=>x.incompleto = !x.enCurso && x.vent+x.ruta < med/2);
+  // Ventanilla que viene del documento «Analisis de Purificadora» (notas del cuaderno no capturadas en MATRIZ)
+  out.forEach(x=>{ const d=HIST.ventanilla2026Doc[x.m]; if(d!=null && x.y===2026){ x.vent=d; x.ventDoc=true; }
+                   x.ventOk = !x.enCurso && (x.ventDoc || !x.incompleto); });
+  return out;
+}
+
+function renderHistorico(){
+  if(!HIST.meses.length){ $("tab-hist").innerHTML='<section class="panel"><p class="mut">Sin datos históricos.</p></section>'; return; }
+  const H=HIST, s26=serie2026(), n0=H.meses.length;
+  const M=[...H.meses, ...s26.map(x=>[x.y,x.m])], n=M.length;
+  const v=[...H.ventanilla, ...s26.map(x=>x.vent)], ruta=[...H.ruta, ...s26.map(x=>x.ruta)];
+  const parcial=[...H.rutaParcial, ...s26.map((x,k)=>x.incompleto||x.enCurso?n0+k:-1).filter(i=>i>=0)];
+  const idx=a=>M.map(([y],i)=>y===a?i:-1).filter(i=>i>=0), i24=idx(2024), i25=idx(2025), i26=idx(2026);
+  const ok26=i26.filter(i=>!parcial.includes(i)), enCurso=s26.find(x=>x.enCurso), inc26=s26.filter(x=>x.incompleto);
+  // Ventanilla tiene su propia completitud (enero 2026 viene completo del documento aunque la ruta no)
+  const parcialV=s26.map((x,k)=>x.ventOk?-1:n0+k).filter(i=>i>=0), ok26V=i26.filter(i=>!parcialV.includes(i));
+  const docV=s26.filter(x=>x.ventDoc).map(x=>MESES[x.m]);
+  const S=(a,ix)=>sum(ix.map(i=>a[i]||0)), prom=(a,ix)=>ix.length?S(a,ix)/ix.length:0;
+  const anios=[[0,"2024"],[i25[0],"2025"],...(i26.length?[[i26[0],"2026"]]:[])];
+  const lbl=M.map(([,m])=>cap(MESES[m]).slice(0,3)), hasta=M[n-1];
+  // ---- Garrafones totales (solo meses completos)
+  const rOk=ruta.map((r,i)=>r!=null && !parcial.includes(i)?i:-1).filter(i=>i>=0);
+  const rOk25=rOk.filter(i=>i<n0), totGf=i=>rOk.includes(i)?ruta[i]+v[i]:null;
+  const shr=ix=>S(ruta,ix)/(S(ruta,ix)+S(v,ix));
+  const rMin=rOk.reduce((a,b)=>totGf(b)<totGf(a)?b:a), rMax=rOk.reduce((a,b)=>totGf(b)>totGf(a)?b:a);
+  // ---- Ventanilla
+  const v24=S(v,i24), v25=S(v,i25), best=i25.reduce((a,b)=>v[b]>v[a]?b:a), worst=i25.reduce((a,b)=>v[b]<v[a]?b:a);
+  const s1=S(v,i25.slice(0,6)), s2=S(v,i25.slice(6));
+  const par=ok26V.map(i=>[i, i25.find(j=>M[j][1]===M[i][1])]).filter(([,j])=>j!=null);   // mismos meses 2026 vs 2025
+  const yoy=par.length?S(v,par.map(p=>p[0]))/S(v,par.map(p=>p[1]))-1:null;
+  const best26=ok26V.length?ok26V.reduce((a,b)=>v[b]>v[a]?b:a):null;
+  // ---- Gastos (2024–2025, documento "Analisis de Purificadora")
+  const G=H.gastos, conceptos=Object.keys(G), MG=H.meses, gMes=MG.map((_,i)=>sum(conceptos.map(c=>G[c][i])));
+  const g24=S(gMes,i24), g25=S(gMes,i25), gOk=i25.filter(i=>!H.gastosIncompletos.includes(i));
+  const gProm=S(gMes,gOk)/gOk.length, gMax=gOk.reduce((a,b)=>gMes[b]>gMes[a]?b:a), gMin=gOk.reduce((a,b)=>gMes[b]<gMes[a]?b:a);
+  const c25=conceptos.map(c=>({k:c, v:S(G[c],i25), v24:S(G[c],i24)})).sort((a,b)=>b.v-a.v);
+  const sue=c25.find(x=>x.k==="Sueldos"), pipaUlt=[...MG.keys()].filter(i=>G["Pipa"][i]>=1000).pop();
+  const nm=i=>`${MESES[M[i][1]]} ${M[i][0]}`;
+
+  const de=f=>s26.filter(f).map(x=>MESES[x.m]);
+  const cov = [
+    ["Ventanilla 2024–2025", `<span class="ok">Completo</span> sep 2024 – dic 2025 (documento «Analisis de Purificadora»)`],
+    ["Ruta 2024–2025", `<span class="ok">Completo</span> sep 2024 – mar 2025 · <span class="part">parcial</span> abr 2025 · sin datos may – dic 2025`],
+    ["Garrafones 2026", s26.length
+      ? `<span class="ok">En vivo</span> de MATRIZ CONCENTRADO: ${de(x=>x.fuente==="pestañas").join(", ")||"—"} de las pestañas mensuales`
+        + (de(x=>x.fuente==="libreta").length?` · ${de(x=>x.fuente==="libreta").join(", ")} de la libreta`:"")
+        + (docV.length?` · ventanilla de ${docV.join(", ")} del documento «Analisis de Purificadora» (notas del cuaderno que no están en MATRIZ)`:"")
+        + (inc26.length?` · <span class="part">incompleto</span> ${inc26.map(x=>MESES[x.m]).join(", ")}`:"")
+        + (enCurso?` · <span class="part">en curso</span> ${MESES[enCurso.m]}`:"")
+      : `<span class="part">Cargando…</span>`],
+    ["Gastos por concepto", `<span class="ok">Completo</span> sep – oct 2024 y feb – dic 2025 · <span class="part">incompleto</span> nov 2024 – ene 2025. El gasto completo de 2026 está en la pestaña 2026 y no se mezcla aquí (aquel sí incluye renta, pipas y transferencias)`],
+    ["Ingresos en pesos 2024–2025", `No hay. La ventanilla se estima a $${H.precioVentanilla} por garrafón; la ruta no se puede valorar (precio por cliente)`]
+  ];
+  const txtParcial = [...(inc26.length?[`${inc26.map(x=>MESES[x.m]).join(", ")} 2026 tiene muy pocos garrafones de ruta registrados en MATRIZ (registro incompleto)`]:[]),
+                      ...(enCurso?[`${MESES[enCurso.m]} 2026 va en curso`]:[])];
+
+  $("tab-hist").innerHTML = `
+    <div class="sec-head"><div class="per">Histórico · <b>septiembre 2024 a ${MESES[hasta[1]]} ${hasta[0]}</b></div></div>
+    <div class="hero"><h1>En 2025 la ventanilla vendió <span class="amt">${int(v25)}</span> garrafones${i26.length?` y en 2026 lleva <span class="amt pos">${int(S(v,i26))}</span>`:""}.</h1>
+      <p>2024 y 2025 salen del documento «Analisis de Purificadora» (leído el 28 de septiembre de 2026); 2026 sale en vivo de MATRIZ CONCENTRADO, igual que la pestaña 2026. Los datos de 2024 y 2025 no están completos: aquí solo se analiza lo que existe y no se calcula utilidad.</p></div>
+
+    <section class="panel"><h2>Qué datos hay</h2><p class="lead">Cada análisis usa solo los meses completos de su serie. Barras punteadas = mes parcial, incompleto o en curso.</p>
+      <div class="tscroll"><table class="t cov"><thead><tr><th>Serie</th><th>Cobertura</th></tr></thead><tbody>
+        ${cov.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join("")}</tbody></table></div></section>
+
+    <section class="panel">
+      <div class="chart-head"><h2 style="margin:0">Garrafones vendidos por mes</h2>
+        <div class="keys"><span><i style="background:var(--in)"></i>Ruta</span><span><i style="background:var(--in-soft)"></i>Ventanilla</span></div></div>
+      ${columnas({labels:lbl, anios, aria:"Garrafones vendidos por mes, ruta y ventanilla",
+        capas:[{v:ruta, fill:"var(--in)"},{v, fill:"var(--in-soft)"}], atenuar:parcial,
+        etiquetas:[rMax, rMin, ...(ok26.length?[ok26[ok26.length-1]]:[]), ...(enCurso?[n-1]:[])], fmt:int,
+        bandas:[{desde:8, hasta:15, texto:"Ruta sin datos (may – dic 2025)"}],
+        tip:i=>`${nm(i)}: ${ruta[i]!=null?`ruta ${int(ruta[i])} + `:"ruta sin dato + "}ventanilla ${int(v[i])} gf${parcial.includes(i)?" (parcial)":""}${i>=n0?` · ${s26[i-n0].fuente==="libreta"?"libreta":"pestañas mensuales"}${s26[i-n0].ventDoc?"; ventanilla del documento":""}`:""}`})}
+      <ul class="an">
+        <li>Sep 2024 – mar 2025 (${rOk25.length} meses completos): <b>${int(prom(ruta,rOk25)+prom(v,rOk25))} garrafones al mes</b>, ruta ${pct(shr(rOk25))} y ventanilla ${pct(1-shr(rOk25))}.</li>
+        ${ok26.length?`<li>2026 (${ok26.length} meses completos): <b>${int(prom(ruta,ok26)+prom(v,ok26))} garrafones al mes</b> (${pct((prom(ruta,ok26)+prom(v,ok26))/(prom(ruta,rOk25)+prom(v,rOk25))-1)} contra sep 2024 – mar 2025), ruta ${pct(shr(ok26))} y ventanilla ${pct(1-shr(ok26))}.</li>`:""}
+        <li>Mes más alto: ${nm(rMax)} (${int(totGf(rMax))} gf). Más bajo: ${nm(rMin)} (${int(totGf(rMin))} gf).</li>
+        <li>Abril 2025 está incompleto en ruta y de mayo a diciembre 2025 no hay datos de ruta${txtParcial.length?`; ${txtParcial.join("; ")}`:""}.</li>
+      </ul>
+    </section>
+
+    <section class="panel"><h2>Ventanilla</h2>
+      <p class="lead">Serie completa. 2024–2025 con ingreso estimado a $${H.precioVentanilla} por garrafón (precio de ese periodo).</p>
+      <div class="kv">
+        <div><span>Sep – dic 2024</span><b>${int(v24)} gf</b><small>≈ ${money(v24*H.precioVentanilla)} · ${int(v24/i24.length)} al mes</small></div>
+        <div><span>2025</span><b>${int(v25)} gf</b><small>≈ ${money(v25*H.precioVentanilla)} · ${int(v25/12)} al mes</small></div>
+        ${i26.length?`<div><span>2026 (a la fecha)</span><b>${int(S(v,i26))} gf</b><small>${ok26V.length?`${int(prom(v,ok26V))} al mes en meses completos`:""}</small></div>`:""}
+        <div><span>Mejor mes 2025</span><b>${cap(MESES[M[best][1]])}</b><small>${int(v[best])} garrafones</small></div>
+        ${best26!=null?`<div><span>Mejor mes 2026</span><b>${cap(MESES[M[best26][1]])}</b><small>${int(v[best26])} garrafones</small></div>`:""}
+      </div>
+      ${columnas({labels:lbl, anios, aria:"Garrafones de ventanilla por mes", fmt:int,
+        capas:[{v, fill:"var(--in)"}], atenuar:parcialV,
+        etiquetas:[best, worst, ...(best26!=null?[best26]:[]), i24.reduce((a,b)=>v[b]>v[a]?b:a)],
+        tip:i=>`${nm(i)}: ${int(v[i])} gf${i<n0?` (≈ ${money(v[i]*H.precioVentanilla)})`:""}${parcialV.includes(i)?" (parcial)":""}${i>=n0&&s26[i-n0].ventDoc?" · documento «Analisis de Purificadora»":""}`})}
+      <ul class="an">
+        <li>2025 tuvo su pico en ${MESES[M[best][1]]} (${int(v[best])}); la segunda mitad cayó a ${int(s2)} garrafones contra ${int(s1)} de la primera (${pct(s2/s1-1)}), hasta ${int(v[worst])} en ${MESES[M[worst][1]]}.</li>
+        ${yoy!=null?`<li>Mismos meses completos de 2026 contra 2025 (${par.map(p=>MESES[M[p[0]][1]].slice(0,3)).join(", ")}): ${int(S(v,par.map(p=>p[0])))} contra ${int(S(v,par.map(p=>p[1])))} garrafones (<b class="${cls(yoy)}">${yoy>=0?"+":""}${pct(yoy)}</b>).${best26!=null?` El mejor mes de 2026 es ${MESES[M[best26][1]]} con ${int(v[best26])}.`:""}</li>`:""}
+      </ul>
+      <div class="tscroll" style="margin-top:14px"><table class="t"><thead><tr><th>Mes</th><th>2024</th><th>2025</th><th>2026</th><th>2026 vs 2025</th></tr></thead><tbody>
+        ${MESES.map((m,k)=>{ const f=a=>M.findIndex(([y,mm])=>y===a&&mm===k), a=f(2024), b=f(2025), c=f(2026);
+          const d=(c>=0&&b>=0&&!parcialV.includes(c))?v[c]/v[b]-1:null, doc=c>=0&&s26[c-n0].ventDoc;
+          return `<tr><td>${cap(m)}</td><td>${a>=0?int(v[a]):"—"}</td><td>${b>=0?int(v[b]):"—"}</td><td>${c>=0?int(v[c])+(parcialV.includes(c)?"*":"")+(doc?"†":""):"—"}</td><td class="${d==null?"":cls(d)}">${d==null?"—":(d>=0?"+":"")+pct(d)}</td></tr>`; }).join("")}
+      </tbody></table></div>
+      ${parcialV.length||docV.length?`<p class="lead" style="margin:8px 0 0">${parcialV.length?"* mes incompleto o en curso: no se compara. ":""}${docV.length?"† del documento «Analisis de Purificadora» (notas del cuaderno que no están en MATRIZ).":""}</p>`:""}
+    </section>
+
+    <section class="panel"><h2>Ruta</h2>
+      <p class="lead">Sin precio por cliente de 2024–2025 no se puede calcular su ingreso; aquí se comparan garrafones.</p>
+      <div class="kv">
+        <div><span>Sep 2024 – mar 2025</span><b>${int(prom(ruta,rOk25))} gf</b><small>promedio mensual (${rOk25.length} meses)</small></div>
+        ${ok26.length?`<div><span>2026</span><b>${int(prom(ruta,ok26))} gf</b><small>promedio mensual (${ok26.length} meses completos)</small></div>
+        <div><span>Cambio</span><b class="${cls(prom(ruta,ok26)/prom(ruta,rOk25)-1)}">${pct(prom(ruta,ok26)/prom(ruta,rOk25)-1)}</b><small>2026 contra sep 2024 – mar 2025</small></div>`:""}
+        <div><span>Peso de la ruta</span><b>${pct(shr(rOk))}</b><small>de los garrafones, meses completos</small></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="chart-head"><h2 style="margin:0">Gastos registrados por mes · 2024–2025</h2>
+        <div class="keys"><span><i style="background:var(--out)"></i>Gastos</span><span><i style="background:none;border:1.5px dashed var(--out)"></i>Mes incompleto</span></div></div>
+      ${columnas({labels:MG.map(([,m])=>cap(MESES[m]).slice(0,3)), anios:anios.slice(0,2), aria:"Gastos registrados por mes",
+        capas:[{v:gMes, fill:"var(--out)"}], atenuar:H.gastosIncompletos, etiquetas:[gMax, gMin, 0], fmt:x=>money(x),
+        tip:i=>`${mesLargo(MG[i])}: ${money(gMes[i])}${H.gastosIncompletos.includes(i)?" (incompleto)":""}`})}
+      <ul class="an">
+        <li>2025: <b>${money(g25)}</b> registrados. En los ${gOk.length} meses completos (feb – dic) el promedio fue <b>${money(gProm)} al mes</b>; el más alto ${MESES[MG[gMax][1]]} (${money(gMes[gMax])}, con sueldos de ${money(G["Sueldos"][gMax])}) y el más bajo ${MESES[MG[gMin][1]]} (${money(gMes[gMin])}).</li>
+        <li>Los sueldos son el <b>${pct(sue.v/g25)}</b> del gasto registrado de 2025 (${money(sue.v)}).</li>
+        <li>Las pipas aparecen hasta ${mesLargo(MG[pipaUlt])}; después solo $100 – $150 algunos meses. Tampoco incluye renta, seguro ni internet: es gasto de caja, no el gasto total. Por eso el gasto de 2026 (completo) está en su propia pestaña y no se grafica aquí.</li>
+        <li>Sep – dic 2024: ${money(g24)}, pero noviembre, diciembre y enero 2025 (barras punteadas) están incompletos.</li>
+      </ul>
+    </section>
+
+    <section class="panel"><h2>En qué se gastó · 2025</h2><p class="lead">Participación de cada concepto en el gasto registrado de 2025.</p>
+      <div class="grid2">
+        <div>${hbars(c25.filter(x=>x.v>0).map(x=>({k:x.k, v:x.v})), g25, "var(--out)", x=>`${money(x.v)} · ${pct(x.v/g25)}`)}</div>
+        <div class="tscroll"><table class="t"><thead><tr><th>Concepto</th><th>Sep – dic 2024</th><th>2025</th><th>% 2025</th><th>Promedio mes 2025</th></tr></thead><tbody>
+          ${c25.map(x=>`<tr><td>${esc(x.k)}</td><td>${money(x.v24)}</td><td>${money(x.v)}</td><td>${pct(x.v/g25)}</td><td>${money(x.v/12)}</td></tr>`).join("")}
+          <tr style="font-weight:700"><td>Total</td><td>${money(g24)}</td><td>${money(g25)}</td><td>100%</td><td>${money(g25/12)}</td></tr>
+        </tbody></table></div>
+      </div>
+    </section>`;
+}
+
+/* ===== Meses en espera: terminados pero sin ligar en EDO RESULTADOS (DATA.espera viene del Apps Script) ===== */
+function renderEspera(){
+  const L = DATA.espera||[], box=$("tab-esp");
+  $("t-esp").textContent = L.length ? `Meses en espera (${L.length})` : "Meses en espera";
+  if(!L.length){ box.innerHTML = `<div class="sec-head"><div class="per">Meses en espera</div></div>
+    <div class="hero"><h1>No hay meses en espera.</h1><p>Todos los meses que ya terminaron están ligados en EDO RESULTADOS.</p></div>`; return; }
+  const fdia=f=>{const [y,mo,d]=f.split("-").map(Number); return new Date(y,mo-1,d).toLocaleDateString("es-MX",{weekday:"short",day:"numeric"});};
+  box.innerHTML = L.map(x=>{
+    const mes=nice(x.nombre), key=`${x.anio}-${String(x.mes+1).padStart(2,"0")}`, lb=x.libreta;
+    const dm=DATA.diario.filter(d=>d.fecha.slice(0,7)===key), dd=dm.filter(d=>!d.no_laborado);
+    const chk=[[lb.notas>=lb.laborales, `Notas de libreta: ${lb.notas} de ${lb.laborales} días laborales`],
+               [x.transferencias_ingresos>0, x.transferencias_ingresos>0?`Ingresos por transferencia capturados: ${money(x.transferencias_ingresos)}`:`Ingresos por transferencia: sin capturar en INGRESOS ${x.nombre} ${x.anio}`],
+               [x.transferencias_gastos>0, x.transferencias_gastos>0?`Gastos por transferencia capturados: ${money(x.transferencias_gastos)}`:`Gastos por transferencia: sin capturar en GASTOS ${x.nombre} ${x.anio}`],
+               [x.tarjeta>0, x.tarjeta>0?`Pagos con tarjeta capturados: ${money(x.tarjeta)}`:"Pagos con tarjeta de crédito: sin capturar (si los hubo)"],
+               [false, `Ligar ${mes.toLowerCase()} en EDO RESULTADOS (paso de cierre)`]];
+    const formas=[...new Set([...Object.keys(x.ingresos),...Object.keys(x.gastos)])];
+    const conc=Object.entries(x.conceptos).map(([k,v])=>({k:nice(k),v})).sort((a,b)=>b.v-a.v);
+    const graf = dd.length ? columnas({labels:dd.map(d=>fdia(d.fecha)), aria:`Garrafones por día de ${mes}`, fmt:int,
+      capas:[{v:dd.map(d=>d.ruta_garrafones), fill:"var(--in)"},{v:dd.map(d=>d.ventanilla_garrafones), fill:"var(--in-soft)"}],
+      etiquetas:dd.map((_,i)=>i), tip:i=>`${fdia(dd[i].fecha)}: ruta ${int(dd[i].ruta_garrafones)} + ventanilla ${int(dd[i].ventanilla_garrafones)} gf`}) : "";
+    return `
+    <div class="sec-head"><div class="per">Mes en espera de cierre · <b>${mes} ${x.anio}</b></div></div>
+    <div class="hero"><h1>${mes} lleva <span class="amt pos">${money(x.total_ingresos)}</span> en ingresos registrados y ${money(x.total_gastos)} en gastos.</h1>
+      <p>Todavía no está en EDO RESULTADOS: las cifras están incompletas hasta capturar las transferencias y los pagos con tarjeta. Cuando se ligue el mes, pasa solo a Resultados.</p></div>
+    <div class="grid">
+      <section class="panel"><h2>Qué falta para cerrarlo</h2>
+        <ul class="an" style="list-style:none;padding-left:0">${chk.map(([ok,t])=>`<li><span class="cat ${ok?"A":""}" style="margin-right:8px">${ok?"listo":"falta"}</span>${esc(t)}</li>`).join("")}</ul></section>
+      <section class="panel"><h2>Registrado hasta hoy</h2>
+        <div class="tscroll"><table class="t"><thead><tr><th>Forma de pago</th><th>Ingresos</th><th>Gastos</th></tr></thead><tbody>
+          ${formas.map(k=>`<tr><td>${esc(nice(k))}</td><td>${money(x.ingresos[k]||0)}</td><td>${money(x.gastos[k]||0)}</td></tr>`).join("")}
+          <tr style="font-weight:600"><td>Total</td><td>${money(x.total_ingresos)}</td><td>${money(x.total_gastos)}</td></tr>
+          <tr><td>Resultado parcial</td><td class="${cls(x.resultado)}" colspan="2" style="text-align:left">${money(x.resultado)} <small class="mut">(cambiará al capturar lo que falta)</small></td></tr>
+        </tbody></table></div></section>
+    </div>
+    <section class="panel"><h2>Libreta de ${mes.toLowerCase()} (efectivo)</h2>
+      <div class="kv">
+        <div><span>Ventanilla</span><b>${money(lb.ventanilla_imp)}</b><small>${int(lb.ventanilla_gf)} garrafones</small></div>
+        <div><span>Ruta en efectivo</span><b>${money(lb.ruta_efectivo)}</b><small>${int(lb.ruta_gf)} garrafones entregados</small></div>
+        <div><span>Gastos de caja</span><b>${money(lb.gastos_caja)}</b><small>pagados en efectivo</small></div>
+        <div><span>Cortes de caja</span><b>${money(lb.cortes)}</b><small>retirado por el dueño</small></div>
+        <div><span>Caja al cierre</span><b>${lb.caja_cierre!=null?money(lb.caja_cierre):"—"}</b><small>último día del mes</small></div>
+      </div>
+      ${graf?`<div class="chart-head" style="margin-top:20px"><h2 style="margin:0;font-size:16px">Garrafones por día</h2>
+        <div class="keys"><span><i style="background:var(--in)"></i>Ruta</span><span><i style="background:var(--in-soft)"></i>Ventanilla</span></div></div>${graf}`:""}
+    </section>
+    <div class="grid2" style="margin-top:24px">
+      <section class="panel" style="margin-top:0"><h2>Gastos por concepto</h2><p class="lead">Registrados hasta hoy en GASTOS ${x.nombre} ${x.anio}.</p>
+        ${conc.length?hbars(conc, x.total_gastos||1, "var(--out)", v=>`${money(v.v)} · ${pct(v.v/(x.total_gastos||1))}`):`<p class="empty">Sin gastos registrados.</p>`}</section>
+      <section class="panel" style="margin-top:0"><h2>Día por día</h2><p class="lead">Notas de libreta del mes.</p>
+        <div class="tscroll"><table class="t"><thead><tr><th>Día</th><th>Ventanilla</th><th>Ruta</th><th>Gastos</th><th>Caja</th><th>Corte</th></tr></thead><tbody>
+        ${dm.slice().reverse().map(d=>d.no_laborado?`<tr><td>${fdia(d.fecha)}</td><td colspan="5" class="mut">${esc(d.nota||"No se trabajó")}</td></tr>`
+          :`<tr><td>${fdia(d.fecha)}</td><td>${money(d.ventanilla_importe)}<br><small class="mut">${d.ventanilla_garrafones} gf</small></td><td>${money(d.ruta_efectivo)}<br><small class="mut">${d.ruta_garrafones} gf</small></td><td>${money(d.gastos)}</td><td>${money(d.caja_total)}</td><td>${d.corte?money(d.corte):"—"}</td></tr>`).join("")}
+        </tbody></table></div></section>
+    </div>`;
+  }).join(`<div style="height:48px"></div>`);
+}
+
+/* ===== Clientes: ABC-XYZ, márgenes y mapa (datos protegidos con clave) =====
+   Garrafones y ventas por mes: pestañas mensuales de MATRIZ (DATA.detalle.clientes, 2026 de febrero al último mes cerrado).
+   Domicilio, precio, días de visita y ubicación: pestaña CLIENTES + GEO CLIENTES, vía ?vista=clientes&clave=… */
+let CLI=null, MAPA=null;
+const money2 = n => new Intl.NumberFormat("es-MX",{style:"currency",currency:"MXN",minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0);
+const CAT_COLOR = {A:"#3ba6f1", B:"#78716c", C:"#e7e5e4"};   // hex: Leaflet pinta SVG y no resuelve var()
+
+function lockHTML(msg){
+  return `<div class="lock"><div class="sec-head" style="padding-top:24px"><div class="per">Clientes · acceso restringido</div></div>
+    <h1 style="font-family:var(--font-d);font-weight:400;font-size:32px;letter-spacing:-.025em;line-height:1.25;margin:8px 0 0">Direcciones, precios y márgenes por cliente.</h1>
+    <p class="mut" style="margin:10px 0 0">Esta pestaña tiene datos sensibles; escribe la clave de Clientes.</p>
+    <form id="cli-form" autocomplete="off"><input id="cli-clave" type="password" placeholder="Clave de Clientes" aria-label="Clave de Clientes" required>
+      <button class="btn" type="submit">Entrar</button></form><div class="msg" id="cli-msg" role="alert">${msg?esc(msg):""}</div></div>`;
+}
+function pedirClave(msg){
+  $("tab-cli").innerHTML = lockHTML(msg);
+  $("cli-form").addEventListener("submit", e=>{ e.preventDefault(); cargarClientes($("cli-clave").value.trim()); });
+}
+async function cargarClientes(clave){
+  if(!clave) return pedirClave();
+  const m=$("cli-msg"); if(m) m.textContent="Cargando…";
+  try{
+    const r=await fetch(`${CONFIG.SOURCE_URL}?key=${encodeURIComponent(KEY||"")}&vista=clientes&clave=${encodeURIComponent(clave)}&t=${Date.now()}`);
+    const j=await r.json();
+    if(!j.ok){ try{ sessionStorage.removeItem("cliClave"); }catch(e){} return pedirClave(j.error||"No se pudo leer Clientes"); }
+    try{ sessionStorage.setItem("cliClave", clave); }catch(e){}
+    CLI=j; renderClientes();
+  }catch(e){ pedirClave("No se pudo conectar con el Sheet."); }
+}
+
+// Clasificación ABC: A hasta el 80% acumulado (incluye al que cruza), B hasta 95%, C el resto.
+function abc(items, key){
+  const tot=sum(items.map(x=>x[key])), ord=items.slice().sort((a,b)=>b[key]-a[key]); let acc=0;
+  ord.forEach(x=>{ const antes=acc/tot; acc+=x[key]; x["abc_"+key] = !x[key] ? "C" : antes<.80 ? "A" : antes<.95 ? "B" : "C"; });
+}
+const xyz = cv => cv==null ? "Z" : cv<.25 ? "X" : cv<.5 ? "Y" : "Z";
+
+function calcClientes(){
+  const anio=DATA.anio, cli=DATA.detalle.clientes||{}, K=CLI.costos;
+  const ult=DATA.cerrado.lastIndexOf(true), ks=[]; for(let k=1;k<=ult;k++) ks.push(k);   // feb → último mes cerrado
+  const agua = K.litrosGarrafon*K.pipaPrecio/K.pipaLitros/(1-(K.merma||0));
+  const insumos = K.insumos ? sum(Object.values(K.insumos)) : 0, costoVar = agua+insumos;
+  // Gasolina REAL: promedio mensual de los gastos de gasolina (pestañas GASTOS) en el mismo periodo
+  const gasC = Object.keys(DATA.detalle.gastos||{}).filter(k=>/GASOLINA/.test(k));
+  const gasMes = ks.length ? sum(ks.map(k=>sum(gasC.map(c=>DATA.detalle.gastos[c][k]||0))))/ks.length : 0;
+  const lista = CLI.clientes.filter(c=>!CONFIG.CANALES.test(c.nombre)).map(c=>{
+    const d=cli[c.nombre]||{gf:[],imp:[]}, gf=ks.map(k=>d.gf[k]||0), imp=ks.map(k=>d.imp[k]||0);
+    const gfT=sum(gf), impT=sum(imp), n=ks.length||1, gfM=gfT/n, impM=impT/n;
+    const sd=Math.sqrt(sum(gf.map(x=>(x-gfM)**2))/n), cv=gfM>0?sd/gfM:null;
+    const precio = c.precio || (gfT?impT/gfT:null);
+    const factura = /FACTURA|^SI$/.test(c.factura||"");
+    const precioNeto = precio!=null ? (factura ? precio/(1+(K.iva||0)) : precio) : null;
+    const visitas = c.dias.length*K.semanasMes;
+    const costoVisita = c.km!=null ? 2*c.km/K.kmPorLitro*K.precioGasolina : null;          // referencia: viaje exclusivo
+    const kmMes = c.km!=null ? 2*c.km*visitas : null;                                         // peso para repartir la gasolina real
+    return {...c, gf, imp, gfT, impT, gfM, impM, gfUlt:d.gf[ult]||0, impUlt:d.imp[ult]||0, cv, xyz:xyz(cv), precio,
+            factura, precioNeto, visitas, costoVisita, kmMes, mapa: c.lat!=null&&c.lng!=null};
+  });
+  // Costo real de ruta: la gasolina del mes se reparte según los km que cada cliente agrega (visitas × ida y vuelta)
+  const kmTot = sum(lista.filter(x=>x.gfT>0||x.impT>0).map(x=>x.kmMes||0));
+  lista.forEach(x=>{
+    x.costoRutaMes = x.kmMes!=null && kmTot ? gasMes*x.kmMes/kmTot : (x.kmMes===0?0:null);
+    x.rutaGf = x.costoRutaMes!=null && x.gfM>0 ? x.costoRutaMes/x.gfM : null;
+    x.margenGf = x.precioNeto!=null ? x.precioNeto-costoVar-(x.rutaGf||0) : null;
+    x.margenPct = x.margenGf!=null && x.precioNeto ? x.margenGf/x.precioNeto : null;
+    x.utilMes = x.margenGf!=null ? x.margenGf*x.gfM : null;
+  });
+  const activos = lista.filter(x=>x.impT>0||x.gfT>0);
+  abc(activos,"impT"); abc(activos,"gfT");
+  lista.forEach(x=>{ if(!activos.includes(x)){ x.abc_impT="—"; x.abc_gfT="—"; x.xyz="—"; } x.cat = x.abc_impT==="—" ? "—" : x.abc_impT+x.xyz; });
+  return {lista, activos, ks, ult, agua, insumos, costoVar, gasMes, kmTot, K};
+}
+
+function popupHTML(x){
+  const f=(v,fn)=>v==null?"—":fn(v);
+  return `<h4>${esc(nice(x.nombre))}</h4><span class="cat ${x.abc_impT}">${x.cat}</span> <small style="color:#78716c">ventas ${x.abc_impT} · garrafones ${x.abc_gfT} · variabilidad ${x.xyz}</small>
+    <dl><dt>Garrafones / mes</dt><dd>${int(x.gfM)} (último ${int(x.gfUlt)})</dd>
+    <dt>Garrafones 2026</dt><dd>${int(x.gfT)}</dd>
+    <dt>Ventas / mes</dt><dd>${money(x.impM)} (último ${money(x.impUlt)})</dd>
+    <dt>Ventas 2026</dt><dd>${money(x.impT)}</dd>
+    <dt>Precio por garrafón</dt><dd>${f(x.precio,money2)}${x.factura?` (${money2(x.precioNeto)} sin IVA)`:""}</dd>
+    <dt>Margen por garrafón</dt><dd>${f(x.margenGf,v=>money2(v)+" · "+pct(x.margenPct))}</dd>
+    <dt>Distancia (por calle)</dt><dd>${f(x.km,v=>v.toLocaleString("es-MX",{maximumFractionDigits:1})+" km · "+x.min+" min")}</dd>
+    <dt>Visitas / mes</dt><dd>${x.dias.length?`${int(x.visitas)} (${x.dias.map(d=>d.slice(0,2).toLowerCase()).join(", ")})`:"sin días de ruta"}</dd>
+    <dt>Gasolina asignada / mes</dt><dd>${f(x.costoRutaMes,money)}${x.rutaGf!=null?` · ${money2(x.rutaGf)}/gf`:""}</dd>
+    <dt>Viaje exclusivo (ref.)</dt><dd>${f(x.costoVisita,money)} por visita</dd>
+    <dt>Utilidad / mes</dt><dd>${f(x.utilMes,money)}</dd></dl>`;
+}
+
+function dibujarMapa(R){
+  if(!window.L){ setTimeout(()=>dibujarMapa(R),300); return; }
+  if(MAPA){ MAPA.remove(); MAPA=null; }
+  const P=CLI.purificadora, pts=R.lista.filter(x=>x.mapa);
+  MAPA=L.map("mapa",{scrollWheelZoom:false});
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(MAPA);
+  const b=[]; const maxGf=Math.max(1,...pts.map(x=>x.gfM));
+  if(P.lat!=null){ b.push([P.lat,P.lng]);
+    L.marker([P.lat,P.lng],{icon:L.divIcon({className:"",html:'<div style="width:18px;height:18px;border-radius:5px;background:#0c0a09;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>',iconSize:[18,18]}),zIndexOffset:1000})
+      .addTo(MAPA).bindPopup(`<h4>${esc(P.nombre)}</h4><small style="color:#78716c">Punto de partida de la ruta${P.fuente?` · ubicación: ${esc(P.fuente.toLowerCase())}`:""}</small>`); }
+  pts.sort((a,b)=>b.gfM-a.gfM).forEach(x=>{ b.push([x.lat,x.lng]);
+    const r=6+10*Math.sqrt(x.gfM/maxGf), m=L.circleMarker([x.lat,x.lng],{radius:r, color:"#0c0a09", weight:1, fillColor:CAT_COLOR[x.abc_impT]||"#e7e5e4", fillOpacity:.9}).addTo(MAPA);
+    m.bindPopup(popupHTML(x)); m.bindTooltip(nice(x.nombre),{direction:"top",offset:[0,-r]});
+    if(P.lat!=null){ let ln=null;
+      m.on("popupopen",()=>{ ln=L.polyline([[P.lat,P.lng],[x.lat,x.lng]],{color:"#0c0a09",weight:1.5,dashArray:"4 4",opacity:.7}).addTo(MAPA); });
+      m.on("popupclose",()=>{ if(ln) MAPA.removeLayer(ln); }); } });
+  if(b.length) MAPA.fitBounds(b,{padding:[30,30],maxZoom:15}); else MAPA.setView([20.674,-103.387],13);
+}
+
+function renderClientes(){
+  if(!CLI) return;
+  if(!DATA){ $("tab-cli").dataset.pend="1"; $("tab-cli").innerHTML=`<p class="mut" style="margin-top:40px">Cargando datos…</p>`; return; }
+  delete $("tab-cli").dataset.pend;
+  const R=calcClientes(), A=R.activos, ult=R.ult, mesUlt=MESES[ult], per=`febrero a ${mesUlt} ${DATA.anio}`;
+  const impTot=sum(A.map(x=>x.impT)), gfTot=sum(A.map(x=>x.gfT));
+  const enMapa=R.lista.filter(x=>x.mapa), revision=R.lista.filter(x=>!x.mapa);
+  const aV=A.filter(x=>x.abc_impT==="A"), aShare=sum(aV.map(x=>x.impT))/impTot;
+  const cats=["A","B","C"], xs=["X","Y","Z"];
+  const celda=(a,z)=>{ const g=A.filter(x=>x.abc_impT===a&&x.xyz===z); return {n:g.length, imp:sum(g.map(x=>x.impT))}; };
+  const K=R.K;
+  const conMargen=A.filter(x=>x.margenGf!=null), utilTot=sum(conMargen.map(x=>x.utilMes||0));
+  const peor=conMargen.slice().sort((a,b)=>a.margenPct-b.margenPct).slice(0,3);
+  const desc={AX:"clave y estables: cuidarlos",AY:"clave con altibajos",AZ:"clave pero irregulares: vigilar",
+              BX:"medianos estables",BY:"medianos con altibajos",BZ:"medianos irregulares",
+              CX:"pequeños estables",CY:"pequeños con altibajos",CZ:"pequeños e irregulares: revisar si conviene ir"};
+  const fila=x=>`<tr><td><span class="dotc" style="background:${CAT_COLOR[x.abc_impT]||"#fff"}"></span>${esc(nice(x.nombre))}<br><small>${esc(x.medio.toLowerCase()||"—")}${x.dias.length?` · ${x.dias.length} días/sem`:""}</small></td>
+    <td><span class="cat ${x.abc_impT}">${x.cat}</span><br><small>gf ${x.abc_gfT}</small></td>
+    <td>${int(x.gfM)}<br><small>últ. ${int(x.gfUlt)}</small></td><td>${int(x.gfT)}</td>
+    <td>${money(x.impM)}<br><small>últ. ${money(x.impUlt)}</small></td><td>${money(x.impT)}</td>
+    <td>${x.precio!=null?money2(x.precio):"—"}<br><small>${x.factura?"factura · "+money2(x.precioNeto)+" s/IVA":""}</small></td>
+    <td class="${x.margenGf==null?"":cls(x.margenGf)}">${x.margenGf!=null?money2(x.margenGf):"—"}<br><small>${x.margenPct!=null?pct(x.margenPct):""}</small></td>
+    <td>${x.km!=null?x.km.toLocaleString("es-MX",{maximumFractionDigits:1})+" km":"—"}<br><small>${x.min!=null?x.min+" min":""}</small></td>
+    <td>${x.costoRutaMes!=null?money(x.costoRutaMes):"—"}<br><small>${x.rutaGf!=null?money2(x.rutaGf)+"/gf":""}</small></td>
+    <td class="${x.utilMes==null?"":cls(x.utilMes)}">${x.utilMes!=null?money(x.utilMes):"—"}</td></tr>`;
+
+  $("tab-cli").innerHTML = `
+    <div class="sec-head"><div class="per">Clientes · <b>${per}</b> · ${A.length} con compras</div>
+      <button class="btn ghost" id="cli-salir" type="button">Cerrar sesión</button></div>
+    <div class="hero"><h1>${aV.length} clientes A concentran <span class="amt pos">${pct(aShare)}</span> de las ventas.</h1>
+      <p>Clasificación ABC por ventas y por garrafones (${per}); XYZ según qué tan parejo compra cada cliente mes a mes. El margen resta el agua (${money2(R.agua)} por garrafón: pipa de ${money(K.pipaPrecio)} / ${int(K.pipaLitros)} L), sello y tapa (${money2(R.insumos)}) y la gasolina real repartida según los km que cada cliente agrega a la ruta.</p></div>
+
+    <section class="panel"><h2>Mapa de clientes</h2>
+      <p class="lead">Centro: ${esc(CLI.purificadora.nombre)} (cuadro negro). Tamaño = garrafones al mes; color = categoría por ventas: <span class="dotc" style="background:${CAT_COLOR.A}"></span>A <span class="dotc" style="background:${CAT_COLOR.B}"></span>B <span class="dotc" style="background:${CAT_COLOR.C}"></span>C. Da clic en un cliente para ver su consumo, ventas, categoría, distancia y costo.</p>
+      <div id="mapa" role="application" aria-label="Mapa de clientes"></div>
+      ${CLI.purificadora.lat==null?`<p class="note"><strong>No se ubicó la purificadora.</strong> Escribe su LAT y LNG en el renglón PURIFICADORA de la pestaña GEO CLIENTES y pon FUENTE = MANUAL.</p>`:""}
+    </section>
+
+    <div class="grid2" style="margin-top:24px">
+      <section class="panel" style="margin-top:0"><h2>Matriz ABC-XYZ</h2>
+        <p class="lead">Clientes y % de ventas en cada cuadro. ABC por ventas: A = 80% de las ventas, B = siguiente 15%, C = último 5%. XYZ por variación mensual de garrafones: X &lt; 25%, Y 25–50%, Z &gt; 50%.</p>
+        <table class="mx"><thead><tr><th></th>${xs.map(z=>`<th>${z} · ${z==="X"?"estable":z==="Y"?"variable":"irregular"}</th>`).join("")}</tr></thead><tbody>
+          ${cats.map(a=>`<tr><th>${a}</th>${xs.map(z=>{ const c=celda(a,z); return `<td class="${a==="A"&&c.n?"hi":""}" title="${a}${z}: ${desc[a+z]}"><b>${c.n}</b><small>${pct(c.imp/impTot)} de ventas</small></td>`; }).join("")}</tr>`).join("")}
+        </tbody></table>
+        <ul class="an">${cats.flatMap(a=>xs.map(z=>[a+z,celda(a,z).n])).filter(([,n])=>n).slice(0,9).map(([k,n])=>`<li><b>${k}</b> (${n}): ${desc[k]}.</li>`).join("")}</ul>
+      </section>
+      <section class="panel" style="margin-top:0"><h2>Margen y costo de ruta</h2>
+        <p class="lead">Por garrafón: precio (sin IVA si factura) − agua − sello y tapa − gasolina real asignada al cliente ÷ sus garrafones.</p>
+        <div class="kv">
+          <div><span>Agua</span><b>${money2(R.agua)}</b><small>por garrafón de ${K.litrosGarrafon} L</small></div>
+          <div><span>Sello y tapa</span><b>${money2(R.insumos)}</b><small>por garrafón</small></div>
+          <div><span>Gasolina real</span><b>${money(R.gasMes)}</b><small>al mes, promedio ${per}</small></div>
+          <div><span>Utilidad / mes</span><b>${money(utilTot)}</b><small>clientes con precio (antes de sueldos y renta)</small></div>
+        </div>
+        ${peor.length?`<ul class="an"><li>Menor margen: ${peor.map(x=>`${esc(nice(x.nombre))} (${pct(x.margenPct)})`).join(", ")}.</li></ul>`:""}
+        <p class="note"><strong>Cómo se reparte la gasolina:</strong> el gasto real de gasolina del mes (pestañas GASTOS) se divide entre los clientes según los km que agrega cada uno: visitas al mes (días de ruta en CLIENTES × ${K.semanasMes}) × ida y vuelta por calle. Clientes sin ubicación o sin días de ruta no reciben gasolina. En la ventana de cada cliente se ve también el costo de un viaje exclusivo como referencia (${K.kmPorLitro} km/L y ${money(K.precioGasolina)}/L, supuestos).</p>
+      </section>
+    </div>
+
+    <section class="panel"><h2>Clientes</h2><p class="lead">Ordenados por ventas ${per}. "Últ." = ${mesUlt}.</p>
+      <div class="tscroll"><table class="t cli"><thead><tr><th>Cliente</th><th>Categoría</th><th>Gf / mes</th><th>Gf 2026</th><th>Ventas / mes</th><th>Ventas 2026</th><th>Precio</th><th>Margen / gf</th><th>Distancia</th><th>Ruta / mes</th><th>Utilidad / mes</th></tr></thead><tbody>
+        ${A.slice().sort((a,b)=>b.impT-a.impT).map(fila).join("")}
+        <tr style="font-weight:600"><td>Total</td><td></td><td>${int(gfTot/R.ks.length)}</td><td>${int(gfTot)}</td><td>${money(impTot/R.ks.length)}</td><td>${money(impTot)}</td><td></td><td></td><td></td><td></td><td>${money(utilTot)}</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="panel"><h2>En revisión · fuera del mapa</h2>
+      <p class="lead">${revision.length} clientes sin domicilio o que no se pudieron ubicar. Cuando se complete su domicilio en CLIENTES aparecen solos en el mapa.</p>
+      ${revision.length?`<div class="tscroll"><table class="t"><thead><tr><th>Cliente</th><th>Motivo</th><th>Ventas 2026</th></tr></thead><tbody>
+        ${revision.sort((a,b)=>b.impT-a.impT).map(x=>`<tr><td>${esc(nice(x.nombre))}</td><td style="text-align:left">${x.geo==="SIN DOMICILIO"?"Sin domicilio":x.geo==="NO ENCONTRADO"?"Domicilio no encontrado en el mapa":x.geo==="PENDIENTE"?"Ubicación pendiente (se calcula en la próxima carga)":esc(x.geo)}</td><td>${money(x.impT)}</td></tr>`).join("")}
+      </tbody></table></div>`:`<p class="empty">Todos los clientes están en el mapa.</p>`}
+      ${R.lista.filter(x=>!x.gfT&&!x.impT).length?`<p class="lead" style="margin:12px 0 0">Sin compras en el periodo (no se clasifican): ${R.lista.filter(x=>!x.gfT&&!x.impT).map(x=>esc(nice(x.nombre))).join(", ")}.</p>`:""}
+    </section>`;
+  $("cli-salir").addEventListener("click",()=>{ CLI=null; try{ sessionStorage.removeItem("cliClave"); }catch(e){} if(MAPA){ MAPA.remove(); MAPA=null; } pedirClave(); });
+  dibujarMapa(R);
+}
+
+function abrirClientes(){
+  if(CLI){ renderClientes(); return; }
+  let k=null; try{ k=sessionStorage.getItem("cliClave"); }catch(e){}
+  if(k) cargarClientes(k); else pedirClave();
+}
+
+/* ===== Pestañas ===== */
+const TABS = {"2026":["t-2026","tab-2026",""], hist:["t-hist","tab-hist","#historico"], esp:["t-esp","tab-esp","#espera"], cli:["t-cli","tab-cli","#clientes"]};
+function showTab(t){
+  Object.entries(TABS).forEach(([k,[b,p]])=>{ const on=k===t; $(p).hidden=!on; $(b).setAttribute("aria-selected",on); $(b).tabIndex=on?0:-1; });
+  try{ history.replaceState(null,"",TABS[t][2]||location.pathname+location.search); }catch(e){}
+  if(t==="cli") abrirClientes();
+  if(t==="cli" && MAPA) setTimeout(()=>MAPA.invalidateSize(),50);
+}
+Object.entries(TABS).forEach(([k,[b]])=>$(b).addEventListener("click",()=>showTab(k)));
+document.querySelector(".tabs").addEventListener("keydown",e=>{
+  if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
+  const ks=Object.keys(TABS), i=ks.findIndex(k=>$(TABS[k][0]).getAttribute("aria-selected")==="true");
+  const n=ks[(i+(e.key==="ArrowRight"?1:ks.length-1))%ks.length]; showTab(n); $(TABS[n][0]).focus(); });
+document.querySelectorAll("nav a").forEach(a=>a.addEventListener("click",()=>showTab("2026")));
+// renderHistorico() se llama desde load(), cuando ya llegó el histórico del Apps Script.
+if(location.hash==="#historico") showTab("hist");
+if(location.hash==="#clientes") showTab("cli");
+if(location.hash==="#espera") showTab("esp");
+
+/* ===== Carga ===== */
+function setStatus(){
+  const when=new Date(DATA.actualizado), hora=when.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
+  $("status").innerHTML = `<span class="dot ${SOURCE}"></span><span>${SOURCE==="live" ? `En vivo · leído ${hora}` : `Sin conexión · datos de las ${hora}`}</span>`;
+  $("foot").textContent = SOURCE==="live"
+    ? `Tablero privado. Fuente: Google Sheets. Resultados: EDO RESULTADOS y pestañas mensuales. Mes actual: pestañas DIARIO y MOVIMIENTOS. Se actualiza cada ${CONFIG.REFRESH_MIN} minutos.`
+    : "No se pudo volver a leer el Sheet; se muestran los últimos datos leídos en esta sesión.";
+}
+
+/* ===== Acceso: la página no trae datos; se piden al Apps Script con la clave de la persona ===== */
+function verApp(si){ $("cargando").hidden=true; $("app").hidden=!si; $("acceso").hidden=si; }
+function pedirAcceso(msg){
+  verApp(false); $("acc-msg").textContent=msg||""; $("acc-clave").value=KEY||"";
+  $("acc-btn").disabled=false; $("acc-btn").textContent="Entrar";
+  try{ $("acc-clave").focus(); }catch(e){}
+}
+function olvidarClave(){ KEY=null; try{ localStorage.removeItem("aguaClave"); sessionStorage.removeItem("cliClave"); }catch(e){} }
+$("acc-form").addEventListener("submit", async e=>{
+  e.preventDefault();
+  KEY=$("acc-clave").value.trim(); if(!KEY) return;
+  $("acc-btn").disabled=true; $("acc-btn").textContent="Entrando…"; $("acc-msg").textContent="";
+  await load();
+});
+$("salir").addEventListener("click", ()=>{ olvidarClave(); DATA=null; CLI=null; $("acc-clave").value=""; pedirAcceso(); });
+
+async function load(forzar){
+  if(!CONFIG.SOURCE_URL) return pedirAcceso("Falta la URL del Apps Script en CONFIG.SOURCE_URL.");
+  if(!KEY) return pedirAcceso();
+  let j=null;
+  try{ const r=await fetch(`${CONFIG.SOURCE_URL}?key=${encodeURIComponent(KEY)}${forzar===true?"&nocache=1":""}&t=${Date.now()}`); j=await r.json(); }
+  catch(e){ console.warn("Sheet no disponible:",e); }
+  if(j && j.error && /clave/i.test(j.error)){ olvidarClave(); DATA=null; return pedirAcceso("Clave incorrecta o dada de baja."); }
+  if(!j || j.error || !j.ingresos){
+    if(DATA){ SOURCE="snap"; setStatus(); return; }      // ya había datos en pantalla: se conservan y se avisa
+    return pedirAcceso("No se pudo leer el Sheet. Revisa tu conexión y vuelve a intentar.");
+  }
+  try{ localStorage.setItem("aguaClave", KEY); }catch(e){}
+  if(j.hist) HIST=j.hist;
+  DATA=norm(j); SOURCE="live"; verApp(true); $("acc-clave").value="";
+  if(DATA.empresa) $("brand").innerHTML = `${nice(DATA.empresa)}<small>Resultados del negocio ${DATA.anio}</small>`;
+  buildSelect(); renderResultados(); renderInventario(); renderActual(); renderHistorico(); renderEspera(); if(CLI && $("tab-cli").dataset.pend) renderClientes(); setStatus();
+}
+$("periodo").addEventListener("change",e=>{ SEL=e.target.value; renderResultados(); });
+/* ===== Botón Actualizar =====
+   1) Si en esta PC corre el ayudante local (scripts/servidor_local.py), lee las fotos nuevas de la libreta con Claude,
+      muestra la tabla del lote y sube al Sheet SOLO cuando se presiona "Confirmar".
+   2) Siempre vuelve a leer el Sheet sin la copia de 5 minutos del Apps Script (nocache=1). */
+let LOTE_POLL=null, LOTE_ULT=null;
+const REV_ABIERTO=new Set(), FOTO_URL={};   // días con el formulario de revisión abierto · fotos ya descargadas
+async function local(ruta, metodo="GET", cuerpo){
+  const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(), metodo==="GET"?2500:15000);
+  const headers={"X-Purificadora":"1"}; if(cuerpo) headers["Content-Type"]="application/json";
+  try{ const r=await fetch(CONFIG.LOCAL_URL+ruta,{method:metodo,headers,body:cuerpo?JSON.stringify(cuerpo):undefined,signal:ctl.signal}); return await r.json(); }
+  finally{ clearTimeout(t); }
+}
+async function fotoLote(fecha){
+  if(FOTO_URL[fecha]) return FOTO_URL[fecha];
+  const r=await fetch(`${CONFIG.LOCAL_URL}/foto?fecha=${encodeURIComponent(fecha)}`,{headers:{"X-Purificadora":"1"}});
+  if(!r.ok) throw new Error("sin foto");
+  return FOTO_URL[fecha]=URL.createObjectURL(await r.blob());
+}
+// Formulario para contestar las dudas / errores de un día desde el dashboard (Claude corrige el JSON con las respuestas).
+// Cada ✗ y aviso llega del ayudante como pregunta concreta (d.preguntas) con respuestas rápidas; las dudas de Claude, como texto libre.
+function preguntaHTML(fecha,k,texto,opciones,origen,bloquea){
+  const ops=(opciones||[]).map(o=>`<button type="button" class="opc" data-l="opcion" data-t="${esc(fecha)}|${k}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
+  return `<li${bloquea?` class="bloq"`:""}><b>${esc(texto)}</b>${bloquea?` <small class="err">(no deja subir el día)</small>`:""}${ops?`<div class="opcs">${ops}</div>`:""}
+    <textarea data-k="${esc(fecha)}|${k}" data-p="${esc(texto)}"${origen?` data-o="${esc(origen)}"`:""} rows="2" placeholder="Elige una opción o escribe tu respuesta"></textarea></li>`;
+}
+function formRevision(d){
+  const pq=d.preguntas||(d.errores.length?[{texto:"No cuadra: "+d.errores.join(" · ")+". ¿Qué dice la nota en esos números?",opciones:[],origen:""}]:[]);
+  const p=pq.map((x,k)=>preguntaHTML(d.fecha,"p"+k,x.texto,x.opciones,x.origen,!x.aviso)).join("");
+  const q=(d.dudas||[]).map((x,k)=>preguntaHTML(d.fecha,k,x,[],"",false)).join("");
+  return `<tr class="rev"><td colspan="6"><div class="revbox">
+    <div class="revfoto" data-foto="${esc(d.fecha)}"><span class="mut">Cargando foto…</span></div>
+    <div class="revq"><p class="lead">Mira la foto y contesta lo que sepas; Claude corrige la nota con tus respuestas y la vuelve a validar.</p>
+      <ol>${p}${q}<li><b>Otra corrección</b> (opcional)<textarea data-k="${esc(d.fecha)}|com" rows="2" placeholder="Ej. el gasto de 450 es gasolina, la vuelta 2 regresan 15"></textarea></li></ol>
+      <div class="acc"><button class="btn" data-l="enviar" data-f="${esc(d.fecha)}">Enviar a Claude</button>
+      <button class="btn ghost" data-l="revisar" data-f="${esc(d.fecha)}">Cerrar</button></div></div></div></td></tr>`;
+}
+function pintarLote(l, aviso){
+  const box=$("lote");
+  const escrito={}; box.querySelectorAll("textarea[data-k]").forEach(t=>{ if(t.value) escrito[t.dataset.k]=t.value; });   // no perder lo escrito al repintar
+  LOTE_ULT=l||null;
+  if(!l){ Object.keys(FOTO_URL).forEach(k=>{ URL.revokeObjectURL(FOTO_URL[k]); delete FOTO_URL[k]; }); REV_ABIERTO.clear(); }
+  if(!l && !aviso){ box.hidden=true; box.innerHTML=""; return; }
+  box.hidden=false;
+  if(!l){ box.innerHTML=`<h2>Fotos de la libreta</h2><p class="empty">${esc(aviso)}</p><div class="acc"><button class="btn ghost" data-l="ocultar">Cerrar</button></div>`; return; }
+  const otras=(l.otras||[]).length?`<ul>${l.otras.map(o=>`<li>${esc(o.foto)}: ${esc(o.estado)}${o.fecha?` (${esc(o.fecha)})`:""}${o.nota?` · ${esc(o.nota)}`:""}</li>`).join("")}</ul>`:"";
+  if(l.estado==="procesando"||l.estado==="subiendo"){
+    const min=l.estado==="procesando"?` Puede tardar 1–2 minutos por foto (${(l.fotos||[]).length}).`:"";
+    box.innerHTML=`<h2>Fotos de la libreta</h2><p class="lead"><span class="spin"></span>${esc(l.mensaje||"Trabajando…")}${min} Puedes seguir usando el dashboard.</p>`; return;
+  }
+  if(l.estado==="error"){
+    box.innerHTML=`<h2>Fotos de la libreta</h2><p class="lead err">No se pudieron leer: ${esc(l.mensaje)}</p>
+      <div class="acc"><button class="btn ghost" data-l="cerrar">Cerrar e intentar de nuevo después</button></div>`; return;
+  }
+  const filas=(l.dias||[]).map(d=>{ const r=d.resumen||{};
+    const gastos=(d.gastos||[]).map(g=>`${esc(g.descripcion||g.concepto)} ${money(g.importe)}`).join(", ")||"—";
+    const avisos=[...(d.errores||[]).map(x=>`<li class="err">✗ ${esc(x)}</li>`),...(d.avisos||[]).map(x=>`<li>${esc(x)}</li>`),
+      ...(d.dudas||[]).map(x=>`<li>? ${esc(x)}</li>`)].join("");
+    const res=(l.resultado||[]).find(x=>x.fecha===d.fecha), subido=!!(res&&res.ok);
+    const nPreg=(d.preguntas||[]).length+(d.dudas||[]).length;
+    const est=subido?`<span class="okk">✓ Subido</span>`
+      :d.revisando?`<span class="spin"></span>Corrigiendo…`
+      :d.errores.length?`<span class="err">✗ ${res?"No subido":"No cuadra"}</span><br><small>${nPreg||1} pregunta(s)</small>`
+      :res?`<span class="okk">✓ Corregido</span><br><small>falta subir</small>`
+      :nPreg?`<span class="okk">✓ Cuadra</span><br><small>${nPreg} pregunta(s)</small>`:`<span class="okk">✓ Cuadra</span>`;
+    const puedeRev=(l.estado==="listo"||l.estado==="subido") && !subido && !d.revisando && (d.errores.length || nPreg);
+    if(!puedeRev) REV_ABIERTO.delete(d.fecha);
+    const btn=puedeRev?`<br><button class="btn ${d.errores.length?"":"ghost "}chico" data-l="revisar" data-f="${esc(d.fecha)}">${REV_ABIERTO.has(d.fecha)?"Cerrar":"Revisar y corregir"}</button>`:"";
+    return `<tr><td><b>${esc(d.fecha)}</b>${d.no_laborado?" · No laborado":""}<br><small>${esc(d.foto||"")}</small>${avisos?`<ul>${avisos}</ul>`:""}
+      ${d.revision?`<p class="lead"><b>Corrección de Claude:</b> ${esc(d.revision)}</p>`:""}
+      ${res?`<pre>${esc(res.lineas.join("\n"))}</pre>`:""}</td>
+      <td>${r.ventanilla_garrafones!=null?r.ventanilla_garrafones:"—"} gf<br>${money(r.ventanilla_importe)}</td><td>${r.ruta_garrafones!=null?r.ruta_garrafones:"—"} gf<br>${money(r.ruta_efectivo)}</td>
+      <td style="white-space:normal;max-width:220px">${gastos}</td><td>${r.caja_inicio!=null?money(r.caja_inicio):"—"} → ${r.caja_total!=null?money(r.caja_total):"—"}</td><td>${est}${btn}</td></tr>`
+      + (puedeRev && REV_ABIERTO.has(d.fecha) ? formRevision(d) : ""); }).join("");
+  const tabla=filas?`<div class="tscroll"><table class="t"><thead><tr><th>Fecha · avisos</th><th>Ventanilla</th><th>Ruta</th><th>Gastos</th><th>Caja inicio → total</th><th>Estado</th></tr></thead><tbody>${filas}</tbody></table></div>`:"";
+  const yaSubido=d=>(l.resultado||[]).some(x=>x.fecha===d.fecha&&x.ok);
+  const pend=(l.dias||[]).filter(d=>!yaSubido(d));
+  const malos=pend.filter(d=>d.errores.length).length, buenos=pend.length-malos;
+  const corrigiendo=(l.dias||[]).some(d=>d.revisando);
+  let acc="";
+  if(corrigiendo&&(l.estado==="listo"||l.estado==="subido")) acc=`<p class="lead"><span class="spin"></span>Claude está corrigiendo con tus respuestas; al terminar podrás confirmar.</p>`;
+  else if(l.estado==="listo") acc=`${buenos?`<button class="btn" data-l="confirmar">Confirmar y subir ${buenos} día(s) al Sheet</button>`:""}
+      <button class="btn ghost" data-l="descartar">Descartar lote</button>`;
+  else acc=`${l.estado==="subido"&&buenos?`<button class="btn" data-l="confirmar">Subir ${buenos} día(s) corregido(s) al Sheet</button>`:""}
+      <button class="btn ghost" data-l="cerrar">Cerrar</button>`;
+  const extra=(l.estado==="listo"||l.estado==="subido")&&malos?`<p class="lead err">${malos} día(s) con ✗ no se pueden subir todavía: presiona "Revisar y corregir", mira la foto y contesta las preguntas.</p>`:"";
+  const rest=l.restantes?`<p class="lead">Quedan ${l.restantes} foto(s) más: presiona Actualizar otra vez después de confirmar.</p>`:"";
+  box.innerHTML=`<h2>Fotos de la libreta</h2><p class="lead">${esc(l.mensaje||"")}</p>${tabla}${otras}${extra}${rest}
+    ${l.faltantes?`<pre>${esc(l.faltantes)}</pre>`:""}<div class="acc">${acc}</div>`;
+  box.querySelectorAll("textarea[data-k]").forEach(t=>{ if(escrito[t.dataset.k]) t.value=escrito[t.dataset.k]; });
+  box.querySelectorAll("[data-foto]").forEach(async el=>{
+    try{ const u=await fotoLote(el.dataset.foto); el.innerHTML=`<a href="${u}" target="_blank" rel="noopener"><img src="${u}" alt="Foto de la nota del ${esc(el.dataset.foto)}"></a>`; }
+    catch(e){ el.innerHTML=`<span class="mut">No se pudo mostrar la foto (ábrela desde la carpeta).</span>`; }
+  });
+}
+async function seguirLote(){
+  clearTimeout(LOTE_POLL);
+  let s; try{ s=await local("/estado"); }catch(e){ return; }
+  const l=s.lote; pintarLote(l);
+  if(l && (l.estado==="procesando"||l.estado==="subiendo"||(l.dias||[]).some(d=>d.revisando))) LOTE_POLL=setTimeout(seguirLote,4000);
+  else if(l && l.estado==="subido") load(true);
+}
+$("lote").addEventListener("click",async e=>{
+  const el=e.target.closest("[data-l]"); if(!el) return; const a=el.dataset.l;
+  if(a==="ocultar") return pintarLote(null);
+  if(a==="revisar"){ const f=el.dataset.f; REV_ABIERTO.has(f)?REV_ABIERTO.delete(f):REV_ABIERTO.add(f); return pintarLote(LOTE_ULT); }
+  if(a==="opcion"){   // respuesta rápida: llena el cuadro; si pide detalle "(escribe…)", deja el cursor para completarlo
+    const t=[...$("lote").querySelectorAll("textarea[data-k]")].find(x=>x.dataset.k===el.dataset.t); if(!t) return;
+    const v=el.dataset.v, pide=/\(escribe[^)]*\)\s*$/.test(v);
+    t.value=pide?v.replace(/\s*\(escribe[^)]*\)\s*$/,"")+": ":v;
+    el.parentNode.querySelectorAll(".opc").forEach(b=>b.classList.toggle("sel",b===el));
+    if(pide){ t.focus(); t.setSelectionRange(t.value.length,t.value.length); }
+    return;
+  }
+  if(a==="enviar"){
+    const f=el.dataset.f, campos=[...$("lote").querySelectorAll("textarea[data-k]")].filter(t=>t.dataset.k.startsWith(f+"|"));
+    const respuestas=campos.filter(t=>t.dataset.p&&t.value.trim()).map(t=>({pregunta:t.dataset.p, respuesta:t.value.trim(), origen:t.dataset.o||undefined}));
+    const comentario=(campos.find(t=>t.dataset.k===f+"|com")||{}).value||"";
+    if(!respuestas.length && !comentario.trim()){ alert("Escribe al menos una respuesta."); return; }
+    el.disabled=true;
+    try{ const r=await local("/revisar","POST",{fecha:f, respuestas, comentario});
+      if(r.error){ alert(r.error); el.disabled=false; return; }
+      REV_ABIERTO.delete(f); campos.forEach(t=>t.value=""); pintarLote(r.lote); seguirLote();
+    }catch(err){ el.disabled=false; alert("El ayudante de la PC no responde."); }
+    return;
+  }
+  e.target.disabled=true;
+  try{
+    if(a==="confirmar"){ await local("/confirmar","POST"); seguirLote(); }
+    if(a==="descartar"){ await local("/descartar","POST"); pintarLote(null,"Lote descartado. Las fotos se volverán a leer la próxima vez."); }
+    if(a==="cerrar"){ await local("/cerrar","POST"); pintarLote(null); }
+  }catch(err){ pintarLote(null,"El ayudante de la PC no responde."); }
+});
+$("actualizar").addEventListener("click",async e=>{
+  const b=e.currentTarget; b.disabled=true; b.textContent="Actualizando…";
+  try{
+    let hayLocal=false;
+    if(CONFIG.LOCAL_URL){ try{ const r=await local("/procesar","POST"); hayLocal=true;
+      if(r.sin_fotos) pintarLote(null,"No hay fotos nuevas en la carpeta FOTOS VENTANILLA.");
+      else if(r.lote){ pintarLote(r.lote); seguirLote(); }
+      else if(r.error) pintarLote(null,r.error);
+    }catch(err){ /* sin ayudante (otra computadora o celular): solo se actualizan los datos */ } }
+    await load(true);
+    if(!hayLocal) $("status").title="Para leer fotos nuevas, presiona Actualizar desde la PC donde está la carpeta de fotos.";
+  } finally { b.disabled=false; b.textContent="↻ Actualizar"; }
+});
+// Al ayudante solo se le habla al presionar el botón (así la página no pide permisos de red local a nadie).
+// Si hay un lote en curso o esperando confirmación, el botón lo vuelve a mostrar.
+load();
+if(CONFIG.SOURCE_URL) setInterval(()=>{ if(KEY && DATA) load(); }, CONFIG.REFRESH_MIN*60*1000);
+</script>
+</body>
+</html>
