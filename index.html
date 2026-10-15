@@ -19,7 +19,7 @@
   --line:#e8e6e5; --line-2:#d6d3d1;
   --accent:#3ba6f1; --accent-edge:#3398e1; --wash:#c1e1f7;
   --in:#3ba6f1; --in-soft:#a8a29e; --out:#78716c; --out-soft:#d6d3d1;
-  --pos:#3398e1; --neg:#dc2626; --util:#0c0a09;
+  --pos:#3398e1; --neg:#dc2626; --warn:#b45309; --warn-bg:#fffbeb; --util:#0c0a09;
   --shadow:0 4px 16px rgba(0,0,0,.05); --shadow-sm:0 1px 2px rgba(0,0,0,.05);
   --font:"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-d:"Inter Tight", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -31,14 +31,14 @@
   :root:not([data-theme="light"]){
     --paper:#0c0a09; --panel:#1c1917; --band:#171412; --ink:#fafaf9; --ink-soft:#e7e5e4; --muted:#a8a29e; --ash:#78716c;
     --line:#292524; --line-2:#44403c; --wash:rgba(59,166,241,.18);
-    --in:#3ba6f1; --in-soft:#57534e; --out:#a8a29e; --out-soft:#44403c; --pos:#7cc4f8; --neg:#f87171; --util:#fafaf9;
+    --in:#3ba6f1; --in-soft:#57534e; --out:#a8a29e; --out-soft:#44403c; --pos:#7cc4f8; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.1); --util:#fafaf9;
     --shadow:0 4px 16px rgba(0,0,0,.35); --shadow-sm:none; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --paper:#0c0a09; --panel:#1c1917; --band:#171412; --ink:#fafaf9; --ink-soft:#e7e5e4; --muted:#a8a29e; --ash:#78716c;
   --line:#292524; --line-2:#44403c; --wash:rgba(59,166,241,.18);
-  --in:#3ba6f1; --in-soft:#57534e; --out:#a8a29e; --out-soft:#44403c; --pos:#7cc4f8; --neg:#f87171; --util:#fafaf9;
+  --in:#3ba6f1; --in-soft:#57534e; --out:#a8a29e; --out-soft:#44403c; --pos:#7cc4f8; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.1); --util:#fafaf9;
   --shadow:0 4px 16px rgba(0,0,0,.35); --shadow-sm:none; color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:inherit}
@@ -70,6 +70,60 @@ nav a:hover{color:var(--ink)}
 .btn-sal{font:inherit;font-size:12px;color:var(--muted);background:none;border:1px solid var(--line-2);border-radius:9999px;padding:4px 10px;cursor:pointer}
 .btn-act{font:inherit;font-size:12px;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:9999px;padding:5px 12px;cursor:pointer;box-shadow:var(--shadow-sm)}
 .btn-act:hover{filter:brightness(.93)} .btn-act:disabled{opacity:.6;cursor:wait}
+/* Agregar: tinta de la paleta (negro en claro, blanco en oscuro), distinto del azul de Actualizar */
+.btn-add{font:inherit;font-size:12px;font-weight:600;color:var(--paper);background:var(--ink);border:0;border-radius:9999px;padding:5px 12px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .1s ease-out}
+.btn-add:hover{filter:brightness(1.25)} .btn-add:active{transform:scale(.97)}
+:root[data-theme="dark"] .btn-add:hover{filter:brightness(.9)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .btn-add:hover{filter:brightness(.9)} }
+
+/* Formulario Agregar (mismo patrón que "Agregar cliente" del control de cartera) */
+dialog.cap{border:1px solid var(--line);border-radius:12px;padding:22px 22px 18px;width:min(620px,calc(100% - 24px));max-height:calc(100dvh - 24px);
+  color:var(--ink);background:var(--panel);font:inherit;box-shadow:0 16px 48px rgba(0,0,0,.18)}
+dialog.cap::backdrop{background:rgba(12,10,9,.42)}
+@media (prefers-reduced-motion:no-preference){
+  dialog.cap[open]{animation:dlg-in .18s ease-out}
+  @keyframes dlg-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+}
+dialog.cap h2{margin:0 0 4px;font-family:var(--font-d);font-size:20px;font-weight:400}
+dialog.cap .lead{margin:0 0 14px}
+.seg{display:inline-flex;gap:2px;padding:3px;background:var(--band);border:1px solid var(--line);border-radius:9999px;margin-bottom:14px}
+.seg button{font:inherit;font-size:13px;font-weight:500;color:var(--muted);background:transparent;border:0;border-radius:9999px;padding:5px 16px;cursor:pointer}
+.seg button[aria-pressed="true"]{color:var(--ink);background:var(--panel);box-shadow:var(--shadow-sm)}
+.ficha{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 14px}
+.ficha .full{grid-column:1/-1}
+.campo{display:flex;flex-direction:column;gap:4px;min-width:0}
+.campo label{font-size:12px;font-weight:600;color:var(--ink-soft)}
+.campo small{font-size:12px;color:var(--muted)}
+.campo input,.campo select,.campo textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;width:100%;box-shadow:none;background-image:none}
+.campo select{appearance:auto;padding-right:10px}
+.campo input:focus-visible,.campo select:focus-visible,.campo textarea:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.campo [aria-invalid="true"]{border-color:var(--neg)}
+.campo .calc{font-size:12px;color:var(--accent-edge)}
+.nuevo{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px;padding:12px;border:1px dashed var(--line-2);border-radius:10px;background:var(--band)}
+.nuevo p{grid-column:1/-1;margin:0;font-size:13px;color:var(--ink-soft)}
+.ficha .error{grid-column:1/-1;margin:0;color:var(--neg);font-size:13px}
+.dup{grid-column:1/-1;font-size:13px;color:var(--ink-soft);background:var(--warn-bg);border:1px solid var(--warn);border-radius:10px;padding:10px 12px}
+.dup b{color:var(--warn)}
+.dup ul{margin:6px 0;padding-left:18px}
+.dup p{margin:0}
+.ficha .acciones{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+@media (max-width:560px){ .ficha,.nuevo{grid-template-columns:minmax(0,1fr)} }
+
+/* Aviso inferior con "Deshacer" */
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,16px);opacity:0;pointer-events:none;z-index:50;display:flex;align-items:center;gap:14px;
+  max-width:calc(100% - 32px);background:var(--ink);color:var(--paper);border-radius:10px;padding:10px 14px;font-size:13px;box-shadow:var(--shadow);transition:opacity .18s ease-out,transform .18s ease-out}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{font:inherit;font-size:13px;font-weight:600;color:var(--accent);background:none;border:0;cursor:pointer;padding:2px 4px}
+@media (prefers-reduced-motion:reduce){ .toast{transition:opacity .15s} .toast,.toast.on{transform:translate(-50%,0)} }
+
+/* Pestaña Capturas */
+.capf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.capf select{font-size:13px;padding:4px 30px 4px 12px}
+.tipo-i{color:var(--accent-edge);font-weight:500} .tipo-g{color:var(--ink);font-weight:500}
+table.t.cap td{font-size:13px} table.t.cap td small{color:var(--muted)}
+table.t.cap tr.borrando td{opacity:.45;text-decoration:line-through}
+.btn-x{font:inherit;font-size:12px;color:var(--neg);background:none;border:1px solid var(--line-2);border-radius:9999px;padding:2px 10px;cursor:pointer}
+.btn-x:hover{border-color:var(--neg)}
 section.panel.lote{margin-top:16px;border-color:var(--accent)}
 .lote .acc{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .lote ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--muted)}
@@ -164,7 +218,7 @@ svg.chart text.on{fill:var(--ink);font-weight:500}
 .kv small{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-size:14px;margin:0}
 
-.tabs{display:flex;gap:8px;margin-top:20px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .tabs button{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:9999px;padding:6px 16px;cursor:pointer}
 .tabs button:hover{border-color:var(--line-2)}
 .tabs button[aria-selected="true"]{color:#fff;background:var(--ink-soft);border-color:var(--ink-soft)}
@@ -228,6 +282,7 @@ footer{margin-top:40px;font-size:12px;color:var(--ash)}
     <div class="hd-der">
       <div class="status" id="status"><span class="dot"></span><span>Cargando…</span></div>
       <button class="btn-sal" id="salir" type="button" title="Olvida la clave en este dispositivo">Salir</button>
+      <button class="btn-add" id="agregar" type="button" title="Agregar un ingreso o un gasto que no está en la libreta (transferencia, tarjeta o efectivo)">＋ Agregar</button>
       <button class="btn-act" id="actualizar" type="button" title="Lee las fotos nuevas de la libreta (desde la PC con el ayudante) y vuelve a leer el Google Sheet">↻ Actualizar</button>
     </div>
   </header>
@@ -239,6 +294,7 @@ footer{margin-top:40px;font-size:12px;color:var(--ash)}
     <button role="tab" id="t-hist" aria-controls="tab-hist" aria-selected="false" tabindex="-1">Histórico</button>
     <button role="tab" id="t-esp" aria-controls="tab-esp" aria-selected="false" tabindex="-1">Meses en espera</button>
     <button role="tab" id="t-cli" aria-controls="tab-cli" aria-selected="false" tabindex="-1">Clientes</button>
+    <button role="tab" id="t-cap" aria-controls="tab-cap" aria-selected="false" tabindex="-1">Capturas</button>
   </div>
 
   <div id="tab-2026" role="tabpanel" aria-labelledby="t-2026">
@@ -286,8 +342,46 @@ footer{margin-top:40px;font-size:12px;color:var(--ash)}
   <!-- ============ CLIENTES (protegida con clave: direcciones, precios y márgenes) ============ -->
   <div id="tab-cli" role="tabpanel" aria-labelledby="t-cli" hidden></div>
 
+  <!-- ============ CAPTURAS (ingresos y gastos agregados desde el botón Agregar) ============ -->
+  <div id="tab-cap" role="tabpanel" aria-labelledby="t-cap" hidden></div>
+
   <footer id="foot"></footer>
 </div>
+
+<!-- ============ AGREGAR: ingreso o gasto que no está en la libreta ============ -->
+<dialog class="cap" id="dlg-cap" aria-labelledby="cap-tit">
+  <h2 id="cap-tit">Agregar movimiento</h2>
+  <p class="lead">Lo que no viene en la libreta: transferencias, tarjeta o efectivo de clientes. Se guarda en la pestaña del mes en el Sheet.</p>
+  <div class="seg" role="group" aria-label="Tipo de movimiento">
+    <button type="button" id="cap-ing" aria-pressed="true">Ingreso</button>
+    <button type="button" id="cap-gas" aria-pressed="false">Gasto</button>
+  </div>
+  <form id="cap-form" class="ficha" novalidate autocomplete="off">
+    <div class="campo"><label for="cap-fecha">Fecha *</label><input id="cap-fecha" type="date" required><small id="cap-mes"></small></div>
+    <div class="campo"><label for="cap-pago">Forma de pago *</label><select id="cap-pago" required></select><small id="cap-pago-n"></small></div>
+
+    <div class="campo full"><label for="cap-quien" id="cap-quien-l">Cliente *</label>
+      <input id="cap-quien" list="cap-lista" required placeholder="Escribe para buscar">
+      <datalist id="cap-lista"></datalist><small id="cap-quien-n"></small></div>
+
+    <div class="nuevo" id="cap-nuevo" hidden>
+      <p id="cap-nuevo-t"></p>
+      <div class="campo cli-n"><label for="cap-n-precio">Precio por garrafón *</label><input id="cap-n-precio" type="number" min="0" step="0.01" inputmode="decimal"></div>
+      <div class="campo cli-n"><label for="cap-n-pago">Paga normalmente con *</label><select id="cap-n-pago"></select></div>
+      <div class="campo cli-n"><label for="cap-n-medio">Medio de venta *</label><select id="cap-n-medio"></select></div>
+    </div>
+
+    <div class="campo ing"><label for="cap-gf">Garrafones</label><input id="cap-gf" type="number" min="0" step="1" inputmode="decimal"><small class="calc" id="cap-gf-c"></small></div>
+    <div class="campo" id="cap-monto-c"><label for="cap-monto">Monto total *</label><input id="cap-monto" type="number" min="0" step="0.01" inputmode="decimal" required><small class="calc" id="cap-monto-x"></small></div>
+
+    <div class="campo full"><label for="cap-nota">Nota</label><input id="cap-nota" maxlength="120" placeholder="Opcional. Ej. factura 1234, pago de 2 semanas"></div>
+    <div class="dup" id="cap-dup" role="alert" hidden></div>
+    <p class="error" id="cap-err" role="alert" hidden></p>
+    <div class="acciones"><button type="button" class="btn ghost" id="cap-cancelar">Cancelar</button><button type="submit" class="btn" id="cap-guardar">Guardar ingreso</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-txt"></span><button type="button" id="toast-btn" hidden>Deshacer</button></div>
 
 <script>
 /* ===== Configuración ===== */
@@ -1058,11 +1152,12 @@ function abrirClientes(){
 }
 
 /* ===== Pestañas ===== */
-const TABS = {"2026":["t-2026","tab-2026",""], hist:["t-hist","tab-hist","#historico"], esp:["t-esp","tab-esp","#espera"], cli:["t-cli","tab-cli","#clientes"]};
+const TABS = {"2026":["t-2026","tab-2026",""], hist:["t-hist","tab-hist","#historico"], esp:["t-esp","tab-esp","#espera"], cli:["t-cli","tab-cli","#clientes"], cap:["t-cap","tab-cap","#capturas"]};
 function showTab(t){
   Object.entries(TABS).forEach(([k,[b,p]])=>{ const on=k===t; $(p).hidden=!on; $(b).setAttribute("aria-selected",on); $(b).tabIndex=on?0:-1; });
   try{ history.replaceState(null,"",TABS[t][2]||location.pathname+location.search); }catch(e){}
   if(t==="cli") abrirClientes();
+  if(t==="cap") abrirCapturas();
   if(t==="cli" && MAPA) setTimeout(()=>MAPA.invalidateSize(),50);
 }
 Object.entries(TABS).forEach(([k,[b]])=>$(b).addEventListener("click",()=>showTab(k)));
@@ -1075,6 +1170,7 @@ document.querySelectorAll("nav a").forEach(a=>a.addEventListener("click",()=>sho
 if(location.hash==="#historico") showTab("hist");
 if(location.hash==="#clientes") showTab("cli");
 if(location.hash==="#espera") showTab("esp");
+if(location.hash==="#capturas") setTimeout(()=>showTab("cap"));   // espera a que se defina abrirCapturas
 
 /* ===== Carga ===== */
 function setStatus(){
@@ -1099,7 +1195,7 @@ $("acc-form").addEventListener("submit", async e=>{
   $("acc-btn").disabled=true; $("acc-btn").textContent="Entrando…"; $("acc-msg").textContent="";
   await load();
 });
-$("salir").addEventListener("click", ()=>{ olvidarClave(); DATA=null; CLI=null; $("acc-clave").value=""; pedirAcceso(); });
+$("salir").addEventListener("click", ()=>{ olvidarClave(); DATA=null; CLI=null; CAP=null; $("acc-clave").value=""; pedirAcceso(); });
 
 async function load(forzar){
   if(!CONFIG.SOURCE_URL) return pedirAcceso("Falta la URL del Apps Script en CONFIG.SOURCE_URL.");
@@ -1264,6 +1360,205 @@ $("actualizar").addEventListener("click",async e=>{
     if(!hayLocal) $("status").title="Para leer fotos nuevas, presiona Actualizar desde la PC donde está la carpeta de fotos.";
   } finally { b.disabled=false; b.textContent="↻ Actualizar"; }
 });
+/* ===== Agregar: ingresos y gastos que no están en la libreta =====
+   Catálogos (CLIENTES con su precio, PROVEEDORES, meses cerrados) y la lista de capturas llegan con ?vista=captura.
+   Se guarda con POST {accion:"capturar"} usando la clave de la persona; el Apps Script escribe en INGRESOS/GASTOS <MES>
+   con ORIGEN = DASHBOARD · <id> · <persona>. El POST va como texto simple (sin encabezados) para que el navegador no
+   haga la consulta previa de CORS, que el Apps Script no contesta. */
+let CAP=null, CAP_TIPO="INGRESO", CAP_ULT="gf", CAP_PEND={};   // CAP_PEND: eliminaciones esperando "Deshacer"
+const hoyISO=()=>{ const d=new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
+const num=v=>{ const n=parseFloat(String(v).replace(",",".")); return isFinite(n)?n:NaN; };
+const r2=n=>Math.round(n*100)/100;
+const fechaCorta=iso=>{ const [y,m,d]=String(iso).split("-").map(Number); return d?`${d} ${MESES[m-1].slice(0,3)} ${y}`:String(iso); };
+const PAGO_TXT={"EFECTIVO":"Efectivo","TRANSFERENCIA":"Transferencia","TARJETA DE CRÉDITO":"Tarjeta de crédito"};
+
+async function cargarCaptura(){
+  const r=await fetch(`${CONFIG.SOURCE_URL}?key=${encodeURIComponent(KEY)}&vista=captura&t=${Date.now()}`);
+  const j=await r.json();
+  if(j.error) throw new Error(/clave/i.test(j.error)?"Tu clave ya no es válida. Sal y vuelve a entrar.":j.error);
+  if(!j.clientes) throw new Error("El Apps Script todavía no tiene la función de captura. Publica la versión nueva de Code.gs.");
+  CAP=j; return j;
+}
+async function postSheet(cuerpo){
+  const r=await fetch(CONFIG.SOURCE_URL,{method:"POST",body:JSON.stringify({key:KEY,...cuerpo})});
+  const j=await r.json(); if(j.error) throw new Error(j.error); return j;
+}
+
+let TOAST_T=null;
+function toast(txt, accion, ms=5000){
+  clearTimeout(TOAST_T); const b=$("toast-btn");
+  $("toast-txt").textContent=txt; b.hidden=!accion; b.onclick=accion?(()=>{ ocultarToast(); accion(); }):null;
+  $("toast").classList.add("on"); TOAST_T=setTimeout(ocultarToast, ms);
+}
+function ocultarToast(){ $("toast").classList.remove("on"); }
+
+/* --- Formulario --- */
+const listaCap=()=>CAP_TIPO==="INGRESO"?CAP.clientes:CAP.proveedores;
+const buscar=t=>{ const k=String(t||"").trim().toUpperCase().replace(/\s+/g," "); return k?listaCap().find(x=>x.nombre===k):null; };
+function opciones(sel, vals, txt=v=>PAGO_TXT[v]||nice(v)){ $(sel).innerHTML=vals.map(v=>`<option value="${esc(v)}">${esc(txt(v))}</option>`).join(""); }
+function capTipo(t){
+  CAP_TIPO=t; const ing=t==="INGRESO";
+  $("cap-ing").setAttribute("aria-pressed",ing); $("cap-gas").setAttribute("aria-pressed",!ing);
+  $("cap-quien-l").textContent=ing?"Cliente *":"Proveedor *";
+  $("cap-guardar").textContent=ing?"Guardar ingreso":"Guardar gasto";
+  document.querySelectorAll("#cap-form .ing").forEach(el=>el.hidden=!ing);
+  $("cap-monto-c").classList.toggle("full",!ing);
+  opciones("cap-pago", CAP.pagos[t]);
+  $("cap-lista").innerHTML=listaCap().map(x=>`<option value="${esc(x.nombre)}"></option>`).join("");
+  $("cap-quien").value=""; $("cap-gf").value=""; $("cap-monto").value=""; $("cap-err").hidden=true;
+  CAP_DUP=null; $("cap-dup").hidden=true;
+  capQuien(); capFecha();
+}
+function precioActual(){
+  if(CAP_TIPO!=="INGRESO") return NaN;
+  const c=buscar($("cap-quien").value); return c ? num(c.precio) : num($("cap-n-precio").value);
+}
+function capQuien(){
+  const t=$("cap-quien").value.trim(), c=buscar(t), ing=CAP_TIPO==="INGRESO";
+  const nuevo=!!t && !c; $("cap-nuevo").hidden=!nuevo;
+  document.querySelectorAll("#cap-nuevo .cli-n").forEach(el=>el.hidden=!ing);
+  $("cap-nuevo-t").innerHTML=nuevo?`<b>${esc(t.toUpperCase())}</b> no está en ${ing?"CLIENTES":"PROVEEDORES"}: se dará de alta al guardar${ing?" con estos datos":""}.`:"";
+  if(c && ing){
+    $("cap-quien-n").textContent=`Precio ${c.precio?money(c.precio)+" por garrafón":"sin capturar en CLIENTES"} · paga normalmente con ${PAGO_TXT[c.pago]||nice(c.pago||"—")}${c.medio?" · "+nice(c.medio):""}`;
+    if(CAP.pagos.INGRESO.includes(c.pago)) $("cap-pago").value=c.pago;
+  } else $("cap-quien-n").textContent=c?`ID ${c.id} en PROVEEDORES`:"";
+  capCalc();
+}
+// Garrafones ↔ monto: se recalcula el campo que NO escribió la persona, con el precio del cliente.
+function capCalc(){
+  const p=precioActual(), gfI=$("cap-gf"), mI=$("cap-monto");
+  $("cap-gf-c").textContent=""; $("cap-monto-x").textContent="";
+  if(CAP_TIPO!=="INGRESO" || !(p>0)) return;
+  if(CAP_ULT==="gf"){ const g=num(gfI.value); if(g>0){ mI.value=r2(g*p); $("cap-monto-x").textContent=`${g} × ${money(p)}`; } }
+  else { const m=num(mI.value); if(m>0){ const g=r2(m/p); gfI.value=g;
+    $("cap-gf-c").textContent=Number.isInteger(g)?`${money(m)} ÷ ${money(p)}`:`${g} no es un número entero: revisa el monto o escribe los garrafones`; } }
+}
+function capFecha(){
+  const f=$("cap-fecha").value, [y,m]=f.split("-").map(Number), el=$("cap-mes");
+  if(!f){ el.textContent=""; return; }
+  const cerrado=y===CAP.anio && CAP.cerrados.includes(m-1);
+  el.textContent=cerrado?`${cap(MESES[m-1])} ya está cerrado: se corrige directo en el Sheet.`:`Va a ${CAP_TIPO==="INGRESO"?"INGRESOS":"GASTOS"} ${MESES[m-1].toUpperCase()} ${y}`;
+  el.style.color=cerrado?"var(--neg)":"";
+}
+async function abrirAgregar(){
+  const b=$("agregar"); b.disabled=true; b.textContent="Abriendo…";
+  try{ if(!CAP) await cargarCaptura(); }
+  catch(e){ toast("No se pudo abrir: "+e.message, null, 7000); return; }
+  finally{ b.disabled=false; b.textContent="＋ Agregar"; }
+  opciones("cap-n-pago", CAP.pagos.INGRESO); opciones("cap-n-medio", CAP.medios);
+  $("cap-fecha").value=hoyISO(); $("cap-fecha").max=hoyISO(); $("cap-nota").value=""; $("cap-n-precio").value="";
+  capTipo(CAP_TIPO); $("dlg-cap").showModal(); $("cap-quien").focus();
+}
+$("agregar").addEventListener("click", abrirAgregar);
+$("cap-ing").addEventListener("click", ()=>capTipo("INGRESO"));
+$("cap-gas").addEventListener("click", ()=>capTipo("GASTO"));
+$("cap-cancelar").addEventListener("click", ()=>$("dlg-cap").close());
+$("cap-quien").addEventListener("input", capQuien);
+$("cap-n-precio").addEventListener("input", capCalc);
+$("cap-gf").addEventListener("input", ()=>{ CAP_ULT="gf"; capCalc(); });
+$("cap-monto").addEventListener("input", ()=>{ CAP_ULT="monto"; capCalc(); });
+$("cap-fecha").addEventListener("input", capFecha);
+$("cap-form").addEventListener("input", e=>{ e.target.removeAttribute("aria-invalid"); $("cap-err").hidden=true; if(e.target.id!=="cap-nota") sinDup(); });
+// Aviso de duplicado: el Apps Script no guarda si ya hay un renglón con la misma fecha, cliente/proveedor y monto,
+// y regresa las coincidencias. Se guarda solo si la persona confirma ("Guardar de todos modos") sin cambiar nada.
+let CAP_DUP=null;
+const firmaMov=mov=>JSON.stringify({...mov, nota:""});
+function sinDup(){
+  if(!CAP_DUP) return; CAP_DUP=null; $("cap-dup").hidden=true;
+  $("cap-guardar").textContent=CAP_TIPO==="INGRESO"?"Guardar ingreso":"Guardar gasto";
+}
+function avisoDup(r, mov){
+  const n=r.coincidencias.length, ing=mov.tipo==="INGRESO";
+  $("cap-dup").innerHTML=`<p><b>¿Duplicado?</b> Ya hay ${n===1?"un "+(ing?"ingreso":"gasto")+" igual":n+" "+(ing?"ingresos":"gastos")+" iguales"} en ${esc(r.pestana)}: mismo día (${esc(r.fecha)}), mismo ${ing?"cliente":"proveedor"} y mismo monto.</p>
+    <ul>${r.coincidencias.map(x=>`<li>Renglón ${x.fila} · ${esc(nice(x.nombre))} · ${money(x.monto)}${x.pago?" · "+esc(PAGO_TXT[x.pago]||nice(x.pago)):""} · <span class="mut">${esc(x.origen)}</span></li>`).join("")}</ul>
+    <p>Si es otro movimiento, presiona <b>Guardar de todos modos</b>. Si ya estaba anotado, cancela.</p>`;
+  $("cap-dup").hidden=false; CAP_DUP=firmaMov(mov);
+}
+$("cap-form").addEventListener("submit", async ev=>{
+  ev.preventDefault();
+  const ing=CAP_TIPO==="INGRESO", f=$("cap-fecha").value, t=$("cap-quien").value.trim(), c=buscar(t);
+  const monto=num($("cap-monto").value), gf=num($("cap-gf").value), [y,m]=f.split("-").map(Number);
+  const malos=[];
+  if(!f || f>hoyISO()) malos.push(["cap-fecha", !f?"Escribe la fecha.":"La fecha no puede ser futura."]);
+  else if(y===CAP.anio && CAP.cerrados.includes(m-1)) malos.push(["cap-fecha", `${cap(MESES[m-1])} ya está cerrado en EDO RESULTADOS: corrígelo directo en el Sheet.`]);
+  if(!t) malos.push(["cap-quien", ing?"Elige el cliente.":"Elige el proveedor."]);
+  if(t && !c && ing){
+    if(!(num($("cap-n-precio").value)>0)) malos.push(["cap-n-precio","Escribe el precio por garrafón del cliente nuevo."]);
+  }
+  if(!(monto>0)) malos.push(["cap-monto","Escribe un monto mayor a 0."]);
+  if(malos.length){ malos.forEach(([id])=>$(id).setAttribute("aria-invalid","true"));
+    $("cap-err").textContent=malos.map(x=>x[1]).join(" "); $("cap-err").hidden=false; $(malos[0][0]).focus(); return; }
+
+  const mov={tipo:CAP_TIPO, fecha:f, monto:r2(monto), pago:$("cap-pago").value, nota:$("cap-nota").value.trim()};
+  if(ing && gf>0) mov.garrafones=r2(gf);
+  if(c) mov.id=c.id;
+  else mov.nuevo=ing?{nombre:t, precio:num($("cap-n-precio").value), pago:$("cap-n-pago").value, medio:$("cap-n-medio").value}:{nombre:t};
+  if(CAP_DUP && CAP_DUP===firmaMov(mov)) mov.confirmar=true;
+  const b=$("cap-guardar"), txt=b.textContent; b.disabled=true; b.textContent="Guardando…";
+  try{
+    const r=await postSheet({accion:"capturar", mov});
+    if(r.duplicado){ avisoDup(r, mov); b.disabled=false; b.textContent="Guardar de todos modos"; $("cap-dup").scrollIntoView({block:"nearest"}); return; }
+    CAP_DUP=null; $("cap-dup").hidden=true;
+    $("dlg-cap").close();
+    toast(`${ing?"Ingreso":"Gasto"} de ${money(r.monto)} · ${nice(r.nombre)} guardado en ${r.pestana}.${r.aviso?" "+r.aviso:""}`, ()=>eliminarCaptura(r.id, true), 8000);
+    CAP=null; await cargarCaptura().catch(()=>{}); renderCapturas(); load(true);
+  }catch(e){ $("cap-err").textContent="No se guardó: "+e.message; $("cap-err").hidden=false; }
+  finally{ if(b.textContent==="Guardando…"){ b.disabled=false; b.textContent=txt; } }
+});
+
+/* --- Pestaña Capturas --- */
+let CAP_FILTRO="todos";
+async function abrirCapturas(){
+  if(!KEY) return;
+  if(!CAP){ $("tab-cap").innerHTML=`<p class="mut" style="margin-top:40px">Cargando capturas…</p>`;
+    try{ await cargarCaptura(); }catch(e){ $("tab-cap").innerHTML=`<p class="neg" style="margin-top:40px">${esc(e.message)}</p>`; return; } }
+  renderCapturas();
+}
+function renderCapturas(){
+  if(!CAP || $("tab-cap").hidden && !$("tab-cap").innerHTML) return;
+  const meses=[...new Set(CAP.capturas.map(x=>x.fecha.slice(0,7)))].sort().reverse();
+  const xs=CAP.capturas.filter(x=>CAP_FILTRO==="todos"||x.fecha.startsWith(CAP_FILTRO))
+    .sort((a,b)=>a.fecha!==b.fecha?(a.fecha<b.fecha?1:-1):(a.capturado<b.capturado?1:-1));   // fecha del movimiento, más reciente arriba
+  const tot=t=>sum(xs.filter(x=>x.tipo===t).map(x=>x.monto));
+  const filas=xs.map(x=>{ const borr=!!CAP_PEND[x.id], m=Number(x.fecha.slice(5,7))-1, cerr=Number(x.fecha.slice(0,4))===CAP.anio&&CAP.cerrados.includes(m);
+    return `<tr${borr?` class="borrando"`:""}><td>${fechaCorta(x.fecha)}</td>
+      <td style="text-align:left"><span class="${x.tipo==="INGRESO"?"tipo-i":"tipo-g"}">${x.tipo==="INGRESO"?"Ingreso":"Gasto"}</span></td>
+      <td style="text-align:left;white-space:normal">${esc(nice(x.nombre))}${x.nota?`<br><small>${esc(x.nota)}</small>`:""}</td>
+      <td>${x.garrafones!=null&&x.garrafones!==""?int(x.garrafones):"—"}</td><td>${money(x.monto)}</td><td style="text-align:left">${esc(PAGO_TXT[x.pago]||nice(x.pago))}</td>
+      <td style="text-align:left">${esc(x.persona)}<br><small>${new Date(x.capturado).toLocaleString("es-MX",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</small></td>
+      <td>${cerr?`<small>Mes cerrado</small>`:borr?`<small>Eliminando…</small>`:`<button class="btn-x" data-x="${esc(x.id)}">Eliminar</button>`}</td></tr>`; }).join("");
+  $("tab-cap").innerHTML=`<section class="panel"><h2>Capturas desde el dashboard</h2>
+    <p class="lead">Ingresos y gastos agregados con el botón <b>＋ Agregar</b>. Cada uno está en la pestaña del mes del Sheet con ORIGEN = DASHBOARD.
+      Eliminar solo quita lo agregado aquí; la libreta y lo capturado a mano en el Sheet no se tocan.</p>
+    <div class="capf"><label class="sel" for="cap-filtro">Mes <select id="cap-filtro"><option value="todos">Todos</option>${meses.map(k=>`<option value="${k}"${k===CAP_FILTRO?" selected":""}>${cap(MESES[Number(k.slice(5))-1])} ${k.slice(0,4)}</option>`).join("")}</select></label>
+      <span class="mut" style="font-size:13px">${xs.length} movimiento(s) · ingresos ${money(tot("INGRESO"))} · gastos ${money(tot("GASTO"))}</span>
+      <button class="btn-add" type="button" data-agregar style="margin-left:auto">＋ Agregar</button></div>
+    ${xs.length?`<div class="tscroll"><table class="t cap"><thead><tr><th>Fecha</th><th style="text-align:left">Tipo</th><th style="text-align:left">Cliente / proveedor</th><th>Garrafones</th><th>Monto</th><th style="text-align:left">Pago</th><th style="text-align:left">Capturó</th><th></th></tr></thead><tbody>${filas}</tbody></table></div>`
+      :`<p class="empty">Todavía no hay capturas${CAP_FILTRO==="todos"?"":" en este mes"}. Usa <b>＋ Agregar</b> para registrar una transferencia, un pago con tarjeta o un cobro en efectivo que no esté en la libreta.</p>`}</section>`;
+}
+$("tab-cap").addEventListener("change", e=>{ if(e.target.id==="cap-filtro"){ CAP_FILTRO=e.target.value; renderCapturas(); } });
+$("tab-cap").addEventListener("click", e=>{
+  if(e.target.closest("[data-agregar]")) return abrirAgregar();
+  const b=e.target.closest("[data-x]"); if(b) eliminarCaptura(b.dataset.x, false);
+});
+// Eliminar con unos segundos para deshacer: el renglón se tacha y la petición sale cuando vence el aviso.
+// desdeAviso = true: se deshace una captura recién guardada (ya no hay que esperar).
+async function eliminarCaptura(id, desdeAviso){
+  const x=(CAP&&CAP.capturas.find(c=>c.id===id))||{};
+  const ir=async()=>{
+    delete CAP_PEND[id];
+    try{ await postSheet({accion:"eliminar_captura", id}); if(CAP) CAP.capturas=CAP.capturas.filter(c=>c.id!==id);
+      if(desdeAviso) toast("Captura deshecha: se quitó del Sheet.");
+      renderCapturas(); load(true); }
+    catch(e){ renderCapturas(); toast("No se pudo eliminar: "+e.message, null, 7000); }
+  };
+  if(desdeAviso) return ir();
+  CAP_PEND[id]=setTimeout(ir, 6000); renderCapturas();
+  toast(`Se eliminará ${x.tipo==="GASTO"?"el gasto":"el ingreso"} de ${money(x.monto)} · ${nice(x.nombre||"")}.`,
+        ()=>{ clearTimeout(CAP_PEND[id]); delete CAP_PEND[id]; renderCapturas(); }, 6000);
+}
+addEventListener("beforeunload", e=>{ if(Object.keys(CAP_PEND).length){ e.preventDefault(); e.returnValue=""; } });
+
 // Al ayudante solo se le habla al presionar el botón (así la página no pide permisos de red local a nadie).
 // Si hay un lote en curso o esperando confirmación, el botón lo vuelve a mostrar.
 load();
